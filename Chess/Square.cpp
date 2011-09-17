@@ -1,29 +1,36 @@
 #include "Square.h"
 
-// Default assignment constructor to set each value to 0 (RED and NOPIECE)
+// Default constructor to set each value to 0 (RED and NOPIECE)
 Square::Square() {
 	squareColor = RED;
 	currPiece = NOPIECE;
 }
 
-// Color assignment constructor
+// Square color constructor
 Square::Square(colors c) {
 	squareColor = c;
 	currPiece = NOPIECE;
 }
 
-// Complete assignment constructor
+// Complete square constructor
 Square::Square(colors c, pieces p) {
 	squareColor = c;
 	currPiece = p;
 }
 
-// Assignment operator
+// Copy Constructor
+Square::Square(const Square& s) {
+	squareColor = s.squareColor;
+	currPiece = s.currPiece;
+}
+
+// Overloaded assignment operator
 Square& Square::operator=(const Square& s) {
 	if (this != &s) {
 		squareColor = s.squareColor;
 		currPiece = s.currPiece;
 	}
+
 	return *this;
 }
 

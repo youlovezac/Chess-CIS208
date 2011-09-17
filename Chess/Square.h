@@ -16,10 +16,11 @@ enum pieces {NOPIECE, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING};
 
 class Square {
 public:
-	Square();
-	Square(colors c);
-	Square(colors c, pieces p);
-	Square& operator=(const Square& s);
+	Square();							// Default constructor
+	Square(colors c);						// Square color constructor
+	Square(colors c, pieces p);			// Complete square constructor
+	Square(const Square& s);				// Copy constructor
+	Square& operator=(const Square& s);		// Overloaded assignment operator
 	colors getColor() const;
 	pieces getPiece() const;
 	void setColor(colors);
