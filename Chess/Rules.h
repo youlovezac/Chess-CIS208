@@ -8,6 +8,7 @@
 
 
 // Author: Josh Halstead
+
 class Rules {
 public:
 
@@ -32,9 +33,9 @@ public:
 	list legalMoveList(Board);
 
 private:
-	bool diagCollision();
-	bool rowCollision();
-	bool colCollision();
+	bool diagCollision(Board, Move);
+	bool rowCollision(Board, Move);
+	bool colCollision(Board, Move);
 
 };
 
