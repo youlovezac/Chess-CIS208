@@ -22,7 +22,7 @@ public:
 	// Consider checkDiagonal, checkRow, checkColumn methods
 
 	// Board will be 
-	bool isLegal(Board, move);
+	bool isLegal(Board, Move, Player);
 
 	bool isCheck(Board);
 	bool isCheckmate(Board);

@@ -2,16 +2,34 @@
 #include "Square.h"
 #include "Rules.h"
 
-// check correct color is being moved
-// check piece has capacity to move to that square
-// check that destination is vacant or occupied by opponent
-// check that it doesn't place you into check
-// check if anything is in the way (e2e4, nothing is on e3 unless it's a knight)
-// check for castling
-// check for en passant
 // Consider checkDiagonal, checkRow, checkColumn methods
-bool Rules::isLegal(Board b, Move m) {
-	return false;
+bool Rules::isLegal(Board b, Move m, Player currPlayer) {
+	bool legalStatus = true;
+
+	// if piece color = current player color
+	if (piece.color == currPlayer.color)
+		legalStatus = false;
+	// if piece color on end square = current player's color
+	if (endSquare.color == currPlayer.color)
+		legalStatus = false;
+	// if end square = empty OR piece color on end square != current player's color
+	if (endSquare == NOPIECE || endSquare.pieceColor != currPlayer.color)
+		legalStatus = false;
+	// if king is in check after move
+	if (isCheck(b))
+		legalStatus = false;
+	// if any square holds a piece in movement pass except for knights
+	if collision(b, m, startSquare, endSquare)
+		legalStatus = false;
+	// if castleStatus == true && castle is initiated
+	// if enPassantStatus == true && en passant is initiated
+	// if move path != valid piece movement
+	// then legalStatus = false
+
+	return legalStatus;
+}
+
+bool collision(Board b, Move m, Square startSquare, Square endSquare) {
 }
 
 bool Rules::isCheck(Board b) {
