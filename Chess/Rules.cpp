@@ -1,25 +1,26 @@
+// Author: Josh Halstead
+// Author: Josh Halstead
 #include "Board.h"
 #include "Square.h"
 #include "Rules.h"
 
-// Consider checkDiagonal, checkRow, checkColumn methods
 bool Rules::isLegal(Board b, Move m, Player currPlayer) {
 	bool legalStatus = true;
 
 	// if piece color = current player color
 	if (piece.color == currPlayer.color)
 		legalStatus = false;
-	// if piece color on end square = current player's color
-	if (endSquare.color == currPlayer.color)
+	// if end square has a piece that's the same as the current player's color
+	if (endSquare.pieceColor == currPlayer.color)
 		legalStatus = false;
-	// if end square = empty OR piece color on end square != current player's color
-	if (endSquare == NOPIECE || endSquare.pieceColor != currPlayer.color)
+	// if end square isn't empty
+	if (endSquare.piece != NOPIECE)
 		legalStatus = false;
 	// if king is in check after move
 	if (isCheck(b))
 		legalStatus = false;
 	// if any square holds a piece in movement pass except for knights
-	if collision(b, m, startSquare, endSquare)
+	if collision(b, m)
 		legalStatus = false;
 	// if castleStatus == true && castle is initiated
 	// if enPassantStatus == true && en passant is initiated
@@ -29,7 +30,23 @@ bool Rules::isLegal(Board b, Move m, Player currPlayer) {
 	return legalStatus;
 }
 
-bool collision(Board b, Move m, Square startSquare, Square endSquare) {
+bool collision(Board b, Move m) {
+	bool collisionStatus = false;
+	Square s;
+
+	s = m.getStartSquare();
+
+	switch (s.getPiece()) {
+		case PAWN:
+		case KNIGHT:
+		case BISHOP:
+		case ROOK:
+		case QUEEN:
+		case KING:
+		default:
+	}
+
+	return collisionStatus;
 }
 
 bool Rules::isCheck(Board b) {
@@ -44,7 +61,7 @@ bool Rules::isDraw(Board b) {
 	return false;
 }
 
-bool Rules::isStalemate(Board b, MoveHistory mh) {
+bool Rules::isStalemate(Board b) {
 	return false;
 }
 
@@ -56,17 +73,14 @@ bool Rules::isBlackWin(Board b) {
 	return false;
 }
 
-MoveList Rules::legalMoveList(Board b) {
-}
-
-bool Rules::diagCollision(Move m, Board b) {
+bool Rules::diagCollision(Board b, Move m) {
 	return false;
 }
 
-bool Rules::colCollision(Move m, Board b) {
+bool Rules::colCollision(Board b, Move m) {
 	return false;
 }
 
-bool Rules::rowCollision(Move m, Board b) {
+bool Rules::rowCollision(Board b, Move m) {
 	return false;
 }

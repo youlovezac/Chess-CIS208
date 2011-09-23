@@ -20,8 +20,6 @@ public:
 	// check for castling
 	// check for en passant
 	// Consider checkDiagonal, checkRow, checkColumn methods
-
-	// Board will be 
 	bool isLegal(Board, Move, Player);
 
 	bool isCheck(Board);
@@ -33,6 +31,7 @@ public:
 	list legalMoveList(Board);
 
 private:
+	bool collision(Board, Move);
 	bool diagCollision(Board, Move);
 	bool rowCollision(Board, Move);
 	bool colCollision(Board, Move);
