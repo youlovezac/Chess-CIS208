@@ -1,40 +1,148 @@
 // Author: Josh Halstead
-// Author: Josh Halstead
+#include <math.h>
 #include "Board.h"
-#include "Square.h"
+#include "misc.h"
+#include "Move.h"
 #include "Rules.h"
+#include "Square.h"
 
-bool Rules::isLegal(Board b, Move m, Player currPlayer) {
+
+Rules::Rules(Board* pointer) {
+	pBoard = pointer;
+}
+
+bool Rules::isLegal(Move m, Player currPlayer) {
 	bool legalStatus = true;
+	Square startSq = m.getStart();
+	Square endSq = m.getDestination();
+	Piece p = startSq.getPiece();
 
-	// if piece color = current player color
-	if (piece.color == currPlayer.color)
+	// Player can't move the other player's color
+	if (p.pieceColor != currPlayer.playerColor) {
 		legalStatus = false;
-	// if end square has a piece that's the same as the current player's color
-	if (endSquare.pieceColor == currPlayer.color)
+
+	// Can't move onto a square that one of your piece occupies
+	} else if ((endSq.getPiece()).pieceColor == currPlayer.playerColor) {
 		legalStatus = false;
+
 	// if end square isn't empty
-	if (endSquare.piece != NOPIECE)
+	// only matters if pawn is moving in a non-capture capacity
+	// otherwise the piece will simply capture the occupant
+	} else if ((endSq.getPiece()).pieceType != NOPIECE) {
 		legalStatus = false;
-	// if king is in check after move
-	if (isCheck(b))
+
+	// Can't place your own King in check
+	} else if (this->placesKingInCheck(m)) {
 		legalStatus = false;
-	// if any square holds a piece in movement pass except for knights
-	if collision(b, m)
+
+	// Movement path must match piece's established moving pattern
+	} else if (!this->isValidMovementPath(m)) {
 		legalStatus = false;
+
+	// Can't move through any pieces that occupy the movement path
+	// Unless the piece is a Knight
+	} else if (collision(m)) {
+		legalStatus = false;
+	}
+
+
 	// if castleStatus == true && castle is initiated
 	// if enPassantStatus == true && en passant is initiated
-	// if move path != valid piece movement
-	// then legalStatus = false
 
 	return legalStatus;
 }
 
-bool collision(Board b, Move m) {
+bool Rules::placesKingInCheck(Move m){
+	// Make a copy of the board and execute the move.
+	// Then call isCheck with new Board
+	// Need two copies of isCheck maybe
+	// 1 to handle ptr to board
+	// 1 to handle Board passed as parameter
+	Board b = *pBoard;
+	b.makeMove(m);
+	
+	return this->isCheck(b);
+
+}
+
+bool Rules::isValidMovementPath(Move m) {
+	int rowDiff = 0, colDiff = 0;
+	bool validPath = true;
+	Square startSq = m.getStart();
+	Square endSq = m.getDestination();
+
+	switch (((m.getStart()).getPiece()).pieceType) {
+	case NOPIECE:
+		validPath = false;
+		break;
+	case PAWN:
+		// Can only move forward - therefore need player color
+		// Can only move 1 space after being moved from its initial position
+		// On its initial move it can move 1 or 2 spaces
+		// On capturing a piece it can move diagonally forward one space
+		break;
+	case BISHOP:
+		rowDiff = abs(startSq.getRow() - endSq.getRow());
+		colDiff = abs(startSq.getCol() - endSq.getCol());
+
+		if (!(rowDiff == colDiff)) {
+			validPath = false;
+		}
+
+		break;
+
+	case KNIGHT:
+		rowDiff = abs(startSq.getRow() - endSq.getRow());
+		colDiff = abs(startSq.getCol() - endSq.getCol());
+
+		if (!((rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2))) {
+			validPath = false;
+		}
+
+		break;
+
+	case ROOK:
+		if (!(startSq.getRow() == endSq.getRow() ||
+			  startSq.getCol() == endSq.getCol())) {
+			validPath = false;
+		}
+
+		break;
+
+	case QUEEN:
+
+		rowDiff = abs(startSq.getRow() - endSq.getRow());
+		colDiff = abs(startSq.getCol() - endSq.getCol());
+
+		if (!(rowDiff == colDiff) || !(startSq.getRow() == endSq.getRow() || 
+									startSq.getCol() == endSq.getCol())) {
+			validPath = false;
+		}
+
+		break;
+
+	case KING:
+		rowDiff = abs(startSq.getRow() - endSq.getRow());
+		colDiff = abs(startSq.getCol() - endSq.getCol());
+
+		if (!(rowDiff <= 1 && colDiff <= 1)) {
+			validPath = false;
+		}
+
+		break;
+
+	default:
+		validPath = false;
+	}
+	
+	return false;
+}
+
+bool Rules::collision(Move m) {
 	bool collisionStatus = false;
 	Square s;
 
-	s = m.getStartSquare();
+	s = m.getStart();
 
 	switch (s.getPiece()) {
 		case PAWN:
@@ -49,38 +157,38 @@ bool collision(Board b, Move m) {
 	return collisionStatus;
 }
 
-bool Rules::isCheck(Board b) {
+bool Rules::isCheck() {
 	return false;
 }
 
-bool Rules::isCheckmate(Board b) {
+bool Rules::isCheckmate() {
 	return false;
 }
 
-bool Rules::isDraw(Board b) {
+bool Rules::isDraw() {
 	return false;
 }
 
-bool Rules::isStalemate(Board b) {
+bool Rules::isStalemate() {
 	return false;
 }
 
-bool Rules::isWhiteWin(Board b) {
+bool Rules::isWhiteWin() {
 	return false;
 }
 
-bool Rules::isBlackWin(Board b) {
+bool Rules::isBlackWin() {
 	return false;
 }
 
-bool Rules::diagCollision(Board b, Move m) {
+bool Rules::diagCollision(Move m) {
 	return false;
 }
 
-bool Rules::colCollision(Board b, Move m) {
+bool Rules::colCollision(Move m) {
 	return false;
 }
 
-bool Rules::rowCollision(Board b, Move m) {
+bool Rules::rowCollision(Move m) {
 	return false;
 }

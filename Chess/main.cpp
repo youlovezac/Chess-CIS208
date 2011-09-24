@@ -8,6 +8,8 @@
 #include "Display.h"
 #include "Rules.h"
 #include "misc.h"
+#include "Move.h"
+
 using namespace std;
 
 int main()
@@ -16,7 +18,7 @@ int main()
 	Display display;
 	Rules rules;			// by convention, we'll list board, display and rules in this order, in parameter lists and so on
 	Move move;
-	Player wPlayer, bPlayer, currentPlayer;
+	Player wPlayer = {WHITE}, bPlayer = {BLACK}, currentPlayer;
 	
 	do {
 		display.setUpPlayers(wPlayer, bPlayer); // returns players set to appropriate playerType

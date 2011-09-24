@@ -12,6 +12,9 @@
 class Rules {
 public:
 
+	Rules();
+	Rules(Board*);
+
 	// check correct color is being moved
 	// check piece has capacity to move to that square
 	// check that destination is vacant or occupied by opponent
@@ -20,21 +23,23 @@ public:
 	// check for castling
 	// check for en passant
 	// Consider checkDiagonal, checkRow, checkColumn methods
-	bool isLegal(Board, Move, Player);
+	bool isLegal(Move, Player);
 
-	bool isCheck(Board);
-	bool isCheckmate(Board);
-	bool isDraw(Board);
-	bool isStalemate(Board, moveHistory);
-	bool isWhiteWin(Board);
-	bool isBlackWin(Board);
-	list legalMoveList(Board);
+	bool isCheck();
+	bool isCheckmate();
+	bool isDraw();
+	// bool isStalemate(moveHistory);
+	bool isWhiteWin();
+	bool isBlackWin();
 
 private:
-	bool collision(Board, Move);
-	bool diagCollision(Board, Move);
-	bool rowCollision(Board, Move);
-	bool colCollision(Board, Move);
+	Board* pBoard;
+	bool placesKingInCheck(Move);
+	bool isValidMovementPath(Move);
+	bool collision(Move);
+	bool diagCollision(Move);
+	bool rowCollision(Move);
+	bool colCollision(Move);
 
 };
 

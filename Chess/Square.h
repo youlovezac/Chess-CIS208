@@ -11,6 +11,8 @@ public:
 	Square& operator=(const Square& s); // Overloaded assignment operator
 	colors getColor() const;
 	pieces getPiece() const;
+	int getRow() const;
+	int getCol() const;
 	void setColor(colors);
 	void setPiece(pieces);
 	// Consider adding methods to get square coordinates

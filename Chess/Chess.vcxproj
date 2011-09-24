@@ -87,7 +87,6 @@
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Move.cpp" />
-    <ClCompile Include="Piece.cpp" />
     <ClCompile Include="Rules.cpp" />
     <ClCompile Include="Square.cpp" />
   </ItemGroup>
@@ -96,7 +95,6 @@
     <ClInclude Include="Display.h" />
     <ClInclude Include="misc.h" />
     <ClInclude Include="Move.h" />
-    <ClInclude Include="Piece.h" />
     <ClInclude Include="Rules.h" />
     <ClInclude Include="Square.h" />
     <ClInclude Include="temp.h" />
