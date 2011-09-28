@@ -6,11 +6,12 @@
 
 class Square {
 public:
-	Square();	// Default constructor
+	Square(); // Default constructor
 	Square(const Square& s); // Copy constructor
 	Square& operator=(const Square& s); // Overloaded assignment operator
-	colors getColor() const;
-	pieces getPiece() const;
+	bool operator==(const Square& s); // Equivalance operator
+	Color getColor() const;
+	Piece getPiece() const;
 	int getRow() const;
 	int getCol() const;
 	void setColor(colors);
@@ -19,8 +20,8 @@ public:
 private:
 	int row; // Rank
 	int col; // File
-	colors squareColor;
-	pieces currPiece;
+	Color squareColor;
+	Piece currPiece;
 };
 
 #endif SQUARE_H

@@ -31,11 +31,15 @@ Square& Square::operator=(const Square& s) {
 	return *this;
 }
 
-colors Square::getColor() const {
+bool Square::operator==(const Square& s) {
+	return row == s.getRow() && col == s.getCol();
+}
+
+Color Square::getColor() const {
 	return squareColor;
 }
 
-pieces Square::getPiece() const {
+Piece Square::getPiece() const {
 	return currPiece;
 }
 
