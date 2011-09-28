@@ -7,52 +7,30 @@ class Board{
 
 public:
 
-
-
-Board::Board& operator=(const Board& board){
-	for(i = 0; i < 8; i++) {
-		for(j = 0; j < 8; j ++) {
-			chessBoard[i][j] = board.chessBoard[i][j];
-		}
-	}
-}
-
-Move Board::getMove(Square start, Square dest){
-	//
-}
-
-
-void Board::makeMove(Square start, Square dest){
-	// Not sure if I even need this, get and set square might be all I need.
-}
-Square Board::getSquare(int rank, int file){ 
-	return chessBoard[rank][file];
-}
-
-
-void Board::setSquare(int rank, int file, Color color, Piece p){ // 
-	chessBoard[rank][file].setColor(color);
-	chessBoard[rank][file].currPiece(p);
-	
-}
-
-
-private:
-Board::Board() // standard constructor, might possibly be usable for initializing new games
-{
+Board::void setUp(){
 	Square filler; // temporary square object used to fill each square
 	Piece occupant; // with assumption that we will write a piece class
 	Color pieceColor; // with assumption that we will write a color class for the board and pieces
 	for(int j = 0; j < 8; i++){ // loop through ranks
 		if(j = 0 || j = 7){ // if first or last rank (the ranks with the non-pawn pieces).
 			for(int i = 0; i < 8; i++){ //loop through files
-					
-				// ... assign each appropriate piece
-
+				
 				if(j = 7) // if in the far row, piece color would be set to black.
-					pieceColor = BLACK; // will likely change
+					occupant.pieceColor = BLACK; // will likely change
 				else
-					pieceColor = WHITE; // " "
+					pieceColor.pieceColor = WHITE; // " "
+				if(i = 0 || i = 7) // for the 1st and last square of the back and front rows, the piece is a rook
+					occupant.pieceType = ROOK; // will likely change
+				else if(i = 1 || i = 6) // second and second to last square get knights
+					occupant.pieceType = KNIGHT;
+				else if(i = 2 || i = 5) // now for the bishops
+					occupant.pieceType = BISHOP; // will likely change
+				else if(i = 3)
+					occupant.pieceType = KING;
+				else if(i = 4)
+					occupant.pieceType = QUEEN;
+				
+
 				
 				filler.setPiece(occupant);
 				filler.setColor(pieceColor);
@@ -81,6 +59,45 @@ Board::Board() // standard constructor, might possibly be usable for initializin
 
 	} // end for(j =0;... loops
 
+} // end setUp
+
+Board::Board& operator=(const Board& board){
+	for(i = 0; i < 8; i++) {
+		for(j = 0; j < 8; j ++) {
+			chessBoard[i][j] = board.chessBoard[i][j];
+		}
+	}
+}
+
+Move Board::getMove(Move m){
+	
+}
+
+
+void Board::makeMove(){
+	// Not sure if I even need this, get and set square might be all I need.
+}
+Square Board::getSquare(int rank, int file){ 
+	return chessBoard[rank][file];
+}
+
+
+void Board::setSquare(int rank, int file, Color color, Piece p){ // 
+	chessBoard[rank][file].setColor(color);
+	chessBoard[rank][file].currPiece(p);
+
+}
+
+void Board::updateBoardHistory() {
+	boardHistory[turn - 1] = chessBoard; // using the turn number as an index, copies the current board-state into an element of the boardHistory array
+    // how turns will be stored is speculative
+}
+
+
+private:
+Board::Board() // standard constructor, might possibly be usable for initializing new games
+{
+	this->setUp();
 } // end constructor
 
 
