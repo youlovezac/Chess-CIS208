@@ -13,7 +13,7 @@ class Rules {
 public:
 
 	Rules();
-	Rules(Board*, Move*);
+	Rules(Board*);
 
 	// check correct color is being moved
 	// check piece has capacity to move to that square
@@ -39,7 +39,7 @@ private:
 	
 	bool isValidMovementPath(Move);
 	bool isValidPawnMove(Square startSq, Square endSq);
-	bool isValidBishopMobe(Square startSq, Square endSq);
+	bool isValidBishopMove(Square startSq, Square endSq);
 	bool isValidKnightMove(Square startSq, Square endSq);
 	bool isValidRookMove(Square startSq, Square endSq);
 	bool isValidQueenMove(Square startSq, Square endSq);

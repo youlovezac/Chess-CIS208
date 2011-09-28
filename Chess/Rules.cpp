@@ -76,13 +76,17 @@ bool Rules::isValidMovementPath(Move m) {
 	Square startSq = m.getStart();
 	Square endSq = m.getDestination();
 	
-	if (startSq.getRow() < SQ_ROW_LL || startSq.getRow() > SQ_ROW_UL) {
-		validPath = false;
-	} else if (endSq.getRow() < SQ_COL_LL || endSq.getRow() > SQ_COL_UL) }
+	if (startSq == endSq) {
 		validPath = false;
 	}
 
-	switch (((m.getStart()).getPiece()).pieceType) {
+	if (startSq.getRow() < SQ_ROW_LL || startSq.getRow() > SQ_ROW_UL) {
+		validPath = false;
+	} else if (endSq.getRow() < SQ_COL_LL || endSq.getRow() > SQ_COL_UL) {
+		validPath = false;
+	}
+
+	switch (m.getStart().getPiece().pieceType) {
 	case NOPIECE:
 		validPath = false;
 		break;
@@ -102,7 +106,7 @@ bool Rules::isValidMovementPath(Move m) {
 		validPath = isValidQueenMove(startSq, endSq);
 		break;
 	case KING:
-		validPath = isValidKindMove(startSq, endSq);
+		validPath = isValidKingMove(startSq, endSq);
 		break;
 	default:
 		validPath = false;
@@ -112,18 +116,83 @@ bool Rules::isValidMovementPath(Move m) {
 }
 
 bool Rules::isValidPawnMove(Square startSq, Square endSq) {
+	int rowDiff = 0, colDiff = 0, startRow = 0, startCol = 0, endRow = 0, endCol = 0;
+	bool validPath = true;
+
+	startRow = startSq.getRow();
+	startCol = startSq.getCol();
+	endRow = endSq.getRow();
+	endCol = endSq.getCol();
+
+	rowDiff = abs(startRow - endRow);
+	colDiff = abs(startCol - endCol);
+
 	// Can only move forward - therefore need player color
-	// Can only move 1 space after being moved from its initial position
-	// On its initial move it can move 1 or 2 spaces
-	// On capturing a piece it can move diagonally forward one space	
+	if (p.playerColor == WHITE) {
+
+		// Can only move forward
+		if (endRow < startRow) {
+			validPath = false;
+		}
+
+		// Can move 1 or 2 spaces if it's the pawn's initial move
+		if (startRow == SQ_ROW_LL + 1 && rowDiff > 2) {
+			validPath = false;
+		}
+		
+		// Can only move 1 space after the pawn's initial move
+		if (startRow > SQ_ROW_LL + 1 && rowDiff != 1) {
+			validPath = false;
+		}
+
+		// Can move 1 space (left or right) diagonally forward to capture a piece
+		if ((startCol != endCol) && 
+			colDiff != 1 && 
+			endRow - startRow != 1) {
+			validPath = false;
+		}
+
+	}
+	else if (p.playerColor == BLACK) {
+
+		// Can only move forward
+		if (endRow > startRow) {
+			validPath = false;
+		}
+
+		// Can move 1 or 2 spaces if it's the pawn's initial move
+		if ((startRow == SQ_ROW_UL - 1) && 
+			(rowDiff == 1 || rowDiff == 2)) {
+			validPath = false;
+		}
+		
+		// Can only move 1 space after the pawn's initial move
+		if (startRow < SQ_ROW_LL - 1 && rowDiff != 1) {
+			validPath = false;
+		}
+
+		// Can move 1 space (left or right) diagonally forward to capture a piece
+		if ((startCol != endCol) && 
+		    (startRow - endRow != 1) &&
+			(colDiff != 1)) {
+
+			validPath = false;
+		}
+
+	} else {
+		validPath = false;
+	}
+
+	return validPath;	
 }
-bool Rules::isValidBishopMobe(Square startSq, Square endSq) {
+
+bool Rules::isValidBishopMove(Square startSq, Square endSq) {
 	int rowDiff = 0, colDiff = 0;
 	
 	rowDiff = abs(startSq.getRow() - endSq.getRow());
 	colDiff = abs(startSq.getCol() - endSq.getCol());
 	
-	return !(rowDiff == colDiff);
+	return (rowDiff == colDiff);
 }
 
 bool Rules::isValidKnightMove(Square startSq, Square endSq) {
@@ -132,11 +201,11 @@ bool Rules::isValidKnightMove(Square startSq, Square endSq) {
 	rowDiff = abs(startSq.getRow() - endSq.getRow());
 	colDiff = abs(startSq.getCol() - endSq.getCol());
 
-	return !((rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2))
+	return (rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2);
 }
 
 bool Rules::isValidRookMove(Square startSq, Square endSq) {
-	return !(startSq.getRow() == endSq.getRow() || startSq.getCol() == endSq.getCol())
+	return (startSq.getRow() == endSq.getRow()) || (startSq.getCol() == endSq.getCol());
 }
 
 bool Rules::isValidQueenMove(Square startSq, Square endSq) {
@@ -145,7 +214,7 @@ bool Rules::isValidQueenMove(Square startSq, Square endSq) {
 	rowDiff = abs(startSq.getRow() - endSq.getRow());
 	colDiff = abs(startSq.getCol() - endSq.getCol());
 
-	return !(rowDiff == colDiff) || !(startSq.getRow() == endSq.getRow() || startSq.getCol() == endSq.getCol())
+	return (rowDiff == colDiff) || (startSq.getRow() == endSq.getRow() || startSq.getCol() == endSq.getCol());
 }
 
 bool Rules::isValidKingMove(Square startSq, Square endSq) {
@@ -154,7 +223,7 @@ bool Rules::isValidKingMove(Square startSq, Square endSq) {
 	rowDiff = abs(startSq.getRow() - endSq.getRow());
 	colDiff = abs(startSq.getCol() - endSq.getCol());
 
-	return !(rowDiff <= 1 && colDiff <= 1)
+	return (rowDiff <= 1) && (colDiff <= 1);
 }
 
 bool Rules::collision(Move m) {
@@ -188,9 +257,9 @@ bool Rules::isDraw() {
 	return false;
 }
 
-bool Rules::isStalemate() {
-	return false;
-}
+//bool Rules::isStalemate() {
+//	return false;
+//}
 
 bool Rules::isWhiteWin() {
 	return false;
