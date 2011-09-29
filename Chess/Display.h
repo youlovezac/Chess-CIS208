@@ -1,9 +1,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-// defines class Display which handles all (?) the I/O, especially
-// displaying the board, but doesn't actually keep track of the board position by itself
-
+// No file received from Alex (9/28/2011 - 9:15pm)
 
 class Display
 {

@@ -228,18 +228,19 @@ bool Rules::isValidKingMove(Square startSq, Square endSq) {
 
 bool Rules::collision(Move m) {
 	bool collisionStatus = false;
-	Square s;
+	Square startSq;
 
-	s = m.getStart();
+	startSq = m.getStart();
 
-	switch (s.getPiece()) {
-		case PAWN:
-		case KNIGHT:
-		case BISHOP:
-		case ROOK:
-		case QUEEN:
-		case KING:
-		default:
+	switch (startSq.getPiece().pieceType) {
+	case NOPIECE:
+	case PAWN:
+	case KNIGHT:
+	case BISHOP:
+	case ROOK:
+	case QUEEN:
+	case KING:
+	default:
 	}
 
 	return collisionStatus;
