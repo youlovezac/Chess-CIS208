@@ -67,18 +67,23 @@ Board::Board& operator=(const Board& board){
 			chessBoard[i][j] = board.chessBoard[i][j];
 		}
 	}
+	return *this;
 }
 
-Move Board::getMove(Move m){
-	
+Board::Board& operator--(){
+	chessboard = boardHistory.chessBoard[turns - 1]; // There will be more to this once I figure out how this will interact with display.
+	return *this;
 }
 
 
-void Board::makeMove(){
-	// Not sure if I even need this, get and set square might be all I need.
+
+void Board::makeMove(Move inMove){
+	// Update the board so that the piece within the starting square is in the destination square. 
+	// The move should already have been ok'd by Rules.cpp.
+	turns++
 }
 Square Board::getSquare(int rank, int file){ 
-	return chessBoard[rank][file];
+	return chessBoard[rank][file]; // returns the corresponding square
 }
 
 
@@ -89,13 +94,13 @@ void Board::setSquare(int rank, int file, Color color, Piece p){ //
 }
 
 void Board::updateBoardHistory() {
-	boardHistory[turn - 1] = chessBoard; // using the turn number as an index, copies the current board-state into an element of the boardHistory array
-    // how turns will be stored is speculative
+	boardHistory[turn] = chessBoard; 
+	// using the turn number as an index, copies the current board-state into an element of the boardHistory array
 }
 
 
 private:
-Board::Board() // standard constructor, might possibly be usable for initializing new games
+Board::Board()
 {
 	this->setUp();
 } // end constructor
@@ -107,8 +112,8 @@ Board::Board(const Board& board){ // copy constructor
 			chessBoard[i][j] = board.chessBoard[i][j];
 		}
 	}
-	// might also want to write something to copy boardHistory, but may not be needed.
 }
+int turns = 0;
 Square chessBoard[8][8];
 Board boardHistory[200]; // The 200 turn limit implies that there will be at the very most 200 different board-states. (Is that a word? It is now!)
 };

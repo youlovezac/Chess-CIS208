@@ -1,17 +1,22 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-// No file received from Alex (9/28/2011 - 9:15pm)
+#include <fstream>
+#include <iostream>
+#include <string>
+#include "Move.h"
 
-class Display
-{
+class Display {
 public:
-	// returns players set to appropriate playerType
-	// playerType is user, computer or file -- also store color?
-	void setUpPlayers(Player wPlayer, Player bPlayer); 
-												
+	void setUpPlayers(Player wPlayer, Player bPlayer);
+	void enableFileMode(const char *file);
+	Move getMove(Board* board, Rules rules, Player currentPlayer) {
+
 private:
-	// maybe store a pointer to the board here
+	bool isFileMode = false;
+	const char *nameoffile;		// argv only comes in char pointer arrays, sorry for C++ strings
+	ifstream chessfile;
+	bool isWhite;
 };
 
 #endif
