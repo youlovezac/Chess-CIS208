@@ -1,12 +1,11 @@
 // Author: Josh Halstead
 
 #include "Square.h"
-#include "misc.h"
 
 // Default constructor
 Square::Square() {
 	squareColor = WHITE;
-	currPiece = NOPIECE;
+    currPiece.pieceType = NOPIECE;
 	row = 1;
 	col = 1;
 }
@@ -43,10 +42,10 @@ Piece Square::getPiece() const {
 	return currPiece;
 }
 
-void Square::setColor(colors c) {
+void Square::setColor(Color c) {
 	squareColor = c;
 }
 
-void Square::setPiece(pieces p) {
+void Square::setPiece(Piece p) {
 	currPiece = p;
 }
