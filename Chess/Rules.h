@@ -26,6 +26,7 @@ public:
 	bool isLegal(Move, Player);
 
 	bool isCheck();
+    bool isCheck(Board b);
 	bool isCheckmate();
 	bool isDraw();
 	// bool isStalemate(moveHistory);
@@ -37,14 +38,15 @@ private:
 
 	bool placesKingInCheck(Move);
 	
-	bool isValidMovementPath(Move);
-	bool isValidPawnMove(Square startSq, Square endSq);
+	bool isValidMovementPath(Move, Player);
+	bool isValidPawnMove(Square startSq, Square endSq, Player currPlayer);
 	bool isValidBishopMove(Square startSq, Square endSq);
 	bool isValidKnightMove(Square startSq, Square endSq);
 	bool isValidRookMove(Square startSq, Square endSq);
 	bool isValidQueenMove(Square startSq, Square endSq);
 	bool isValidKingMove(Square startSq, Square endSq);
 	
+    bool isOutOfBounds(Square s);
 	bool collision(Move);
 	bool diagCollision(Move);
 	bool rowCollision(Move);

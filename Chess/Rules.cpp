@@ -6,10 +6,16 @@
 #include "Rules.h"
 #include "Square.h"
 
-const int SQ_ROW_UL = 7;
-const int SQ_ROW_LL = 0;
-const int SQ_COL_UL = 7;
-const int SQ_COL_LL = 0;
+// We're undecided on what format to store the coordinates for each square in the Square class.
+//		The choices are 0-based (0-7) and 1-based (1-8).
+// 
+// The Board is 0-based but the user will enter 1-based notation. Decisions, decisions...
+// In the mean time these are here to ease the transition (if one occurs) from 0-based to 1-based
+// in my code.
+const int SQ_ROW_UL = 7; // Row Upper Limit
+const int SQ_ROW_LL = 0; // Row Lower Limit
+const int SQ_COL_UL = 7; // Column Upper Limit
+const int SQ_COL_LL = 0; // Column Lower Limit
 
 Rules::Rules(Board* pointer) {
 	pBoard = pointer;
@@ -26,13 +32,12 @@ bool Rules::isLegal(Move m, Player currPlayer) {
 		legalStatus = false;
 
 	// Can't move onto a square that one of your piece occupies
-	} else if ((endSq.getPiece()).pieceColor == currPlayer.playerColor) {
+	} else if ((endSq.getPiece().pieceColor == currPlayer.playerColor) {
 		legalStatus = false;
 
-	// if end square isn't empty
-	// only matters if pawn is moving in a non-capture capacity
+	// if end square isn't empty only matters if pawn is moving in a non-capture capacity
 	// otherwise the piece will simply capture the occupant
-	} else if ((endSq.getPiece()).pieceType != NOPIECE) {
+	} else if (endSq.getPiece().pieceType != NOPIECE) {
 		legalStatus = false;
 
 	// Can't place your own King in check
@@ -40,7 +45,7 @@ bool Rules::isLegal(Move m, Player currPlayer) {
 		legalStatus = false;
 
 	// Movement path must match piece's established moving pattern
-	} else if (!this->isValidMovementPath(m)) {
+	} else if (!(this->isValidMovementPath(m, currPlayer))) {
 		legalStatus = false;
 
 	// Can't move through any pieces that occupy the movement path
@@ -69,29 +74,23 @@ bool Rules::placesKingInCheck(Move m){
 
 }
 
-bool Rules::isValidMovementPath(Move m) {
-	int rowDiff = 0, colDiff = 0;
+bool Rules::isValidMovementPath(Move m, Player currPlayer) {
 	bool validPath = true;
 	
 	Square startSq = m.getStart();
 	Square endSq = m.getDestination();
-	
-	if (startSq == endSq) {
-		validPath = false;
-	}
 
-	if (startSq.getRow() < SQ_ROW_LL || startSq.getRow() > SQ_ROW_UL) {
-		validPath = false;
-	} else if (endSq.getRow() < SQ_COL_LL || endSq.getRow() > SQ_COL_UL) {
-		validPath = false;
-	}
+	// A move must consist of at least two different squares
+	// Otherwise the player can just pass their turn by entering
+	// the same square for start and end squares.
+	validPath = (startSq != endSq);
+
+	// The start and end squares must be within the confines of the board
+    validPath = !(isOutOfBounds(startSq) || isOutOfBounds(endSq);
 
 	switch (m.getStart().getPiece().pieceType) {
-	case NOPIECE:
-		validPath = false;
-		break;
 	case PAWN:
-		validPath = isValidPawnMove(startSq, endSq);
+		validPath = isValidPawnMove(startSq, endSq, currPlayer);
 		break;
 	case BISHOP:
 		validPath = isValidBishopMove(startSq, endSq);
@@ -115,67 +114,79 @@ bool Rules::isValidMovementPath(Move m) {
 	return validPath;
 }
 
-bool Rules::isValidPawnMove(Square startSq, Square endSq) {
-	int rowDiff = 0, colDiff = 0, startRow = 0, startCol = 0, endRow = 0, endCol = 0;
+bool isOutOfBounds(Square s) {
+    return (s.getRow() < SQ_ROW_LL || s.getRow() > SQ_ROW_UL ||
+           s.getCol() < SQ_COL_LL || s.getCol() > SQ_COL_UL); 
+}
+
+bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer) {
+	int rowDiff = 0, colDiff = 0;
+
+	int startRow = 0, endRow = 0;
+	int startCol = 0, endCol = 0;
+
+	int whitePawnStartingRow = SQ_ROW_LL + 1;
+	int blackPawnStartingRow = SQ_ROW_UL - 1;
+
 	bool validPath = true;
 
 	startRow = startSq.getRow();
-	startCol = startSq.getCol();
 	endRow = endSq.getRow();
+
+	startCol = startSq.getCol();
 	endCol = endSq.getCol();
 
 	rowDiff = abs(startRow - endRow);
 	colDiff = abs(startCol - endCol);
 
-	// Can only move forward - therefore need player color
-	if (p.playerColor == WHITE) {
+
+	// Need current player's color since they move in opposing directions
+	// White moves forward from Row 1 to Row 8
+	if (currPlayer.playerColor == WHITE) {
+
+		// Can't exist on White's "back row"
+		if (startRow < whitePawnStartingRow) {
+			validPath = false;
 
 		// Can only move forward
-		if (endRow < startRow) {
+        } else if (endRow < startRow) {
 			validPath = false;
-		}
 
 		// Can move 1 or 2 spaces if it's the pawn's initial move
-		if (startRow == SQ_ROW_LL + 1 && rowDiff > 2) {
+		// and only 1 space if it's NOT the INTIAL move.
+		//		Take advantage of the fact that a pawn can only exist 
+		//		on its starting row if it hasn't previously moved
+        } else if (!(startRow == whitePawnStartingRow && rowDiff == 2) &&
+			!(startRow >= whitePawnStartingRow && rowDiff == 1)) {
 			validPath = false;
-		}
 		
-		// Can only move 1 space after the pawn's initial move
-		if (startRow > SQ_ROW_LL + 1 && rowDiff != 1) {
-			validPath = false;
-		}
-
-		// Can move 1 space (left or right) diagonally forward to capture a piece
-		if ((startCol != endCol) && 
-			colDiff != 1 && 
-			endRow - startRow != 1) {
+		// Can move 1 space diagonally forward (left or right) to capture a piece
+        } else if (startCol == endCol || colDiff != 1 || endRow - startRow != 1) {
 			validPath = false;
 		}
 
 	}
-	else if (p.playerColor == BLACK) {
+	// Black moves forward from Row 8 to Row 1
+	else if (currPlayer.playerColor == BLACK) {
+
+		// Can't exist on Black's "back row"
+		if (startRow > blackPawnStartingRow) {
+			validPath = false;
 
 		// Can only move forward
-		if (endRow > startRow) {
+		} else if (endRow > startRow) {
 			validPath = false;
-		}
 
 		// Can move 1 or 2 spaces if it's the pawn's initial move
-		if ((startRow == SQ_ROW_UL - 1) && 
-			(rowDiff == 1 || rowDiff == 2)) {
+		// and only 1 space if it's NOT the INTIAL move.
+		//		Take advantage of the fact that a pawn can only exist 
+		//		on its starting row if it hasn't previously moved
+		} else if (!(startRow == blackPawnStartingRow && rowDiff == 2) &&
+				  !(startRow <= blackPawnStartingRow && rowDiff == 1)) {
 			validPath = false;
-		}
 		
-		// Can only move 1 space after the pawn's initial move
-		if (startRow < SQ_ROW_LL - 1 && rowDiff != 1) {
-			validPath = false;
-		}
-
-		// Can move 1 space (left or right) diagonally forward to capture a piece
-		if ((startCol != endCol) && 
-		    (startRow - endRow != 1) &&
-			(colDiff != 1)) {
-
+		// Can move 1 space diagonally forward (left or right) to capture a piece
+		} else if (startCol == endCol || colDiff != 1 || startRow - endRow != 1) {
 			validPath = false;
 		}
 
@@ -233,7 +244,6 @@ bool Rules::collision(Move m) {
 	startSq = m.getStart();
 
 	switch (startSq.getPiece().pieceType) {
-	case NOPIECE:
 	case PAWN:
 	case KNIGHT:
 	case BISHOP:
@@ -247,6 +257,10 @@ bool Rules::collision(Move m) {
 }
 
 bool Rules::isCheck() {
+	return false;
+}
+
+bool Rules::isCheck(Board b) {
 	return false;
 }
 
