@@ -48,9 +48,9 @@ private:
 	
     bool isOutOfBounds(Square s);
 	bool collision(Move);
-	bool diagCollision(Move);
-	bool rowCollision(Move);
-	bool colCollision(Move);
+	bool diagCollision(int startRow, int endRow, int startCol, int endCol);
+	bool rowCollision(int row, int startCol, int endCol);
+	bool colCollision(int col, int startRow, int endRow);
 
 };
 

@@ -86,7 +86,7 @@ bool Rules::isValidMovementPath(Move m, Player currPlayer) {
 	validPath = (startSq != endSq);
 
 	// The start and end squares must be within the confines of the board
-    validPath = !(isOutOfBounds(startSq) || isOutOfBounds(endSq);
+    validPath = !(isOutOfBounds(startSq) || isOutOfBounds(endSq));
 
 	switch (m.getStart().getPiece().pieceType) {
 	case PAWN:
@@ -120,7 +120,7 @@ bool isOutOfBounds(Square s) {
 }
 
 bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer) {
-	int rowDiff = 0, colDiff = 0;
+	int absRowDiff = 0, absColDiff = 0;
 
 	int startRow = 0, endRow = 0;
 	int startCol = 0, endCol = 0;
@@ -136,8 +136,8 @@ bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer) {
 	startCol = startSq.getCol();
 	endCol = endSq.getCol();
 
-	rowDiff = abs(startRow - endRow);
-	colDiff = abs(startCol - endCol);
+	absRowDiff = abs(endRow - startRow);
+	absColDiff = abs(endCol - startCol);
 
 
 	// Need current player's color since they move in opposing directions
@@ -156,12 +156,12 @@ bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer) {
 		// and only 1 space if it's NOT the INTIAL move.
 		//		Take advantage of the fact that a pawn can only exist 
 		//		on its starting row if it hasn't previously moved
-        } else if (!(startRow == whitePawnStartingRow && rowDiff == 2) &&
-			!(startRow >= whitePawnStartingRow && rowDiff == 1)) {
+        } else if (!(startRow == whitePawnStartingRow && absRowDiff == 2) &&
+			!(startRow >= whitePawnStartingRow && absRowDiff == 1)) {
 			validPath = false;
 		
 		// Can move 1 space diagonally forward (left or right) to capture a piece
-        } else if (startCol == endCol || colDiff != 1 || endRow - startRow != 1) {
+        } else if (startCol == endCol || absColDiff != 1 || endRow - startRow != 1) {
 			validPath = false;
 		}
 
@@ -181,12 +181,12 @@ bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer) {
 		// and only 1 space if it's NOT the INTIAL move.
 		//		Take advantage of the fact that a pawn can only exist 
 		//		on its starting row if it hasn't previously moved
-		} else if (!(startRow == blackPawnStartingRow && rowDiff == 2) &&
-				  !(startRow <= blackPawnStartingRow && rowDiff == 1)) {
+		} else if (!(startRow == blackPawnStartingRow && absRowDiff == 2) &&
+				  !(startRow <= blackPawnStartingRow && absRowDiff == 1)) {
 			validPath = false;
 		
 		// Can move 1 space diagonally forward (left or right) to capture a piece
-		} else if (startCol == endCol || colDiff != 1 || startRow - endRow != 1) {
+		} else if (startCol == endCol || absColDiff != 1 || startRow - endRow != 1) {
 			validPath = false;
 		}
 
@@ -198,21 +198,21 @@ bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer) {
 }
 
 bool Rules::isValidBishopMove(Square startSq, Square endSq) {
-	int rowDiff = 0, colDiff = 0;
+	int absRowDiff = 0, absColDiff = 0;
 	
-	rowDiff = abs(startSq.getRow() - endSq.getRow());
-	colDiff = abs(startSq.getCol() - endSq.getCol());
+	absRowDiff = abs(endSq.getRow() - startSq.getRow());
+	absColDiff = abs(endSq.getCol() - startSq.getCol());
 	
-	return (rowDiff == colDiff);
+	return (absRowDiff == absColDiff);
 }
 
 bool Rules::isValidKnightMove(Square startSq, Square endSq) {
-	int rowDiff = 0, colDiff = 0;
+	int absRowDiff = 0, absColDiff = 0;
 	
-	rowDiff = abs(startSq.getRow() - endSq.getRow());
-	colDiff = abs(startSq.getCol() - endSq.getCol());
+	absRowDiff = abs(endSq.getRow() - startSq.getRow());
+	absColDiff = abs(endSq.getCol() - startSq.getCol());
 
-	return (rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2);
+	return (absRowDiff == 2 && absColDiff == 1) || (absRowDiff == 1 && absColDiff == 2);
 }
 
 bool Rules::isValidRookMove(Square startSq, Square endSq) {
@@ -220,36 +220,73 @@ bool Rules::isValidRookMove(Square startSq, Square endSq) {
 }
 
 bool Rules::isValidQueenMove(Square startSq, Square endSq) {
-	int rowDiff = 0, colDiff = 0;
+	int absRowDiff = 0, absColDiff = 0;
 	
-	rowDiff = abs(startSq.getRow() - endSq.getRow());
-	colDiff = abs(startSq.getCol() - endSq.getCol());
+	absRowDiff = abs(endSq.getRow() - startSq.getRow());
+	absColDiff = abs(endSq.getCol() - startSq.getCol());
 
-	return (rowDiff == colDiff) || (startSq.getRow() == endSq.getRow() || startSq.getCol() == endSq.getCol());
+	return (absRowDiff == absColDiff) || (startSq.getRow() == endSq.getRow() || startSq.getCol() == endSq.getCol());
 }
 
 bool Rules::isValidKingMove(Square startSq, Square endSq) {
-	int rowDiff = 0, colDiff = 0;
+	int absRowDiff = 0, absColDiff = 0;
 	
-	rowDiff = abs(startSq.getRow() - endSq.getRow());
-	colDiff = abs(startSq.getCol() - endSq.getCol());
+	absRowDiff = abs(endSq.getRow() - startSq.getRow());
+	absColDiff = abs(endSq.getCol() - startSq.getCol());
 
-	return (rowDiff <= 1) && (colDiff <= 1);
+	return (absRowDiff <= 1) && (absColDiff <= 1);
 }
 
 bool Rules::collision(Move m) {
+    int rowDiff = 0, colDiff = 0;
+    int absRowDiff = 0, absColDiff = 0;
+    int startRow = 0, startCol = 0;
+    int endRow = 0, endCol = 0;
 	bool collisionStatus = false;
-	Square startSq;
+
+	Square startSq, endSq;
 
 	startSq = m.getStart();
+    endSq = m.getDestination();
+
+    startRow = startSq.getRow();
+    startCol = startSq.getCol();
+    endRow = endSq.getRow();
+    endCol = endSq.getCol();
+
+    rowDiff = endRow - startRow;
+    colDiff = endCol - startCol;
+    absRowDiff = abs(rowDiff);
+    absColDiff = abs(colDiff);
 
 	switch (startSq.getPiece().pieceType) {
 	case PAWN:
+        // TODO
 	case KNIGHT:
+        // Knight's are the only piece that can move through other pieces
+        collisionStatus = false;
+        break;
+
 	case BISHOP:
+        collisionStatus = this->diagCollision(startRow, endRow, startCol, endCol);
+        break;
 	case ROOK:
+        collisionStatus = this->rowCollision(startRow, startCol, endCol);
+        collisionStatus = collisionStatus || this->colCollision(startCol, startRow, endRow);
+        break;
 	case QUEEN:
+        // NOTE: The Queen & King have the same type of valid movements with the length of
+        // each movement being the differing factor. But, since I pass the startRow/Col, endRow/Col
+        // to each method I should be able to just let this drop through to the KING call.
+
+        // collisionStatus = this->rowCollision(startRow, startCol, endCol);
+        // collisionStatus = collisionStatus || this->colCollision(startCol, startRow, endRow);
+        // collisionStatus = collisionStatus || this->diagCollision(startrow, endRow, startCol, endCol);
+        // break;
 	case KING:
+        collisionStatus = this->rowCollision(startRow, startCol, endCol);
+        collisionStatus = collisionStatus || this->colCollision(startCol, startRow, endRow);
+        collisionStatus = collisionStatus || this->diagCollision(startRow, endRow, startCol, endCol);
 	default:
 	}
 
@@ -284,14 +321,77 @@ bool Rules::isBlackWin() {
 	return false;
 }
 
-bool Rules::diagCollision(Move m) {
-	return false;
+bool Rules::diagCollision(int startRow, int endRow, int startCol, int endCol) {
+    bool collisionStatus = false;
+
+    if (startRow > endRow) {
+        if (startCol > endCol) {
+            for (int i = 1; i < abs(endRow - startRow); i++) {
+                if (pBoard->getSquare(startRow - i, startCol - i).getPiece() != NOPIECE) {
+                    collisionStatus = true;
+                }
+            }
+        } else {
+            for (int i = 1; i < abs(endRow - startRow); i++) {
+                if (pBoard->getSquare(startRow - i, startCol + i).getPiece() != NOPIECE) {
+                    collisionStatus = true;
+                }
+            }
+        }
+    } else {
+        if (startCol > endCol) {
+            for (int i = 1; i < abs(endRow - startRow); i++) {
+                if (pBoard->getSquare(startRow + i, startCol - i).getPiece() != NOPIECE) {
+                    collisionStatus = true;
+                }
+            }
+        } else {
+            for (int i = 1; i < abs(endRow - startRow); i++) {
+                if (pBoard->getSquare(startRow + i, startCol + i).getPiece() != NOPIECE) {
+                    collisionStatus = true;
+                }
+            }
+        }
+    }
+	return collisionStatus;
 }
 
-bool Rules::colCollision(Move m) {
-	return false;
+bool Rules::colCollision(int col, int startRow, int endRow) {
+    bool collisionStatus = false;
+
+    if (startRow > endRow) {
+        for (int i = 1; i < abs(endRow - startRow); i++) {
+            if (pBoard->getSquare(startRow - i, col).getPiece() != NOPIECE) {
+                collisionStatus = true;
+            }
+        }
+    } else {
+        for (int i = 1; i < abs(endRow - startRow); i++) {
+            if (pBoard->getSquare(startRow + i, col).getPiece() != NOPIECE) {
+                collisionStatus = true;
+            }
+        }
+    }
+
+	return collisionStatus;
 }
 
-bool Rules::rowCollision(Move m) {
-	return false;
+bool Rules::rowCollision(int row, int startCol, int endCol) {
+    bool collisionStatus = false;
+
+    if (startCol > endCol) {
+        for (int i = 1; i < abs(endCol - startCol); i++) {
+            if(pBoard->getSquare(row, startCol - i).getPiece() != NOPIECE) {
+                collisionStatus = true;
+            }
+        }
+    } else {
+        for (int i = 1; i < abs(endCol - startCol); i++) {
+            if(pBoard->getSquare(row, startCol + i).getPiece() != NOPIECE) {
+                collisionStatus = true;
+            }
+        }
+    }
+
+	return collisionStatus;
 }
