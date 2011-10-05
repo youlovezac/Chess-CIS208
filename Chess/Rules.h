@@ -23,34 +23,35 @@ public:
 	// check for castling
 	// check for en passant
 	// Consider checkDiagonal, checkRow, checkColumn methods
-	bool isLegal(Move, Player);
+	bool isLegal(Move, Player) const;
 
-	bool isCheck();
-    bool isCheck(Board b);
-	bool isCheckmate();
-	bool isDraw();
+	bool isCheck() const;
+    bool isCheck(Board b) const;
+	bool isCheckmate() const;
+	bool isDraw() const;
 	// bool isStalemate(moveHistory);
-	bool isWhiteWin();
-	bool isBlackWin();
+	bool isWhiteWin() const;
+	bool isBlackWin() const;
 
 private:
 	Board* pBoard;
 
-	bool placesKingInCheck(Move);
+	bool placesKingInCheck(Move) const;
 	
-	bool isValidMovementPath(Move, Player);
-	bool isValidPawnMove(Square startSq, Square endSq, Player currPlayer);
-	bool isValidBishopMove(Square startSq, Square endSq);
-	bool isValidKnightMove(Square startSq, Square endSq);
-	bool isValidRookMove(Square startSq, Square endSq);
-	bool isValidQueenMove(Square startSq, Square endSq);
-	bool isValidKingMove(Square startSq, Square endSq);
+	bool isValidMovementPath(Move, Player) const;
+	bool isValidPawnMove(Square startSq, Square endSq, Player currPlayer) const;
+	bool isValidBishopMove(Square startSq, Square endSq) const;
+	bool isValidKnightMove(Square startSq, Square endSq) const;
+	bool isValidRookMove(Square startSq, Square endSq) const;
+	bool isValidQueenMove(Square startSq, Square endSq) const;
+	bool isValidKingMove(Square startSq, Square endSq) const;
 	
-    bool isOutOfBounds(Square s);
-	bool collision(Move);
-	bool diagCollision(int startRow, int endRow, int startCol, int endCol);
-	bool rowCollision(int row, int startCol, int endCol);
-	bool colCollision(int col, int startRow, int endRow);
+    bool isOutOfBounds(Square s) const;
+
+	bool collision(Move) const;
+	bool diagCollision(int startRow, int endRow, int startCol, int endCol) const;
+	bool rowCollision(int row, int startCol, int endCol) const;
+	bool colCollision(int col, int startRow, int endRow) const;
 
 };
 

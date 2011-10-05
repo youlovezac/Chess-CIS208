@@ -17,11 +17,15 @@ const int SQ_ROW_LL = 0; // Row Lower Limit
 const int SQ_COL_UL = 7; // Column Upper Limit
 const int SQ_COL_LL = 0; // Column Lower Limit
 
+Rules::Rules() {
+    //TODO
+}
+
 Rules::Rules(Board* pointer) {
 	pBoard = pointer;
 }
 
-bool Rules::isLegal(Move m, Player currPlayer) {
+bool Rules::isLegal(Move m, Player currPlayer) const {
 	bool legalStatus = true;
 	Square startSq = m.getStart();
 	Square endSq = m.getDestination();
@@ -61,7 +65,7 @@ bool Rules::isLegal(Move m, Player currPlayer) {
 	return legalStatus;
 }
 
-bool Rules::placesKingInCheck(Move m){
+bool Rules::placesKingInCheck(Move m) const {
 	// Make a copy of the board and execute the move.
 	// Then call isCheck with new Board
 	// Need two copies of isCheck maybe
@@ -74,7 +78,7 @@ bool Rules::placesKingInCheck(Move m){
 
 }
 
-bool Rules::isValidMovementPath(Move m, Player currPlayer) {
+bool Rules::isValidMovementPath(Move m, Player currPlayer) const {
 	bool validPath = true;
 	
 	Square startSq = m.getStart();
@@ -114,12 +118,12 @@ bool Rules::isValidMovementPath(Move m, Player currPlayer) {
 	return validPath;
 }
 
-bool isOutOfBounds(Square s) {
+bool Rules::isOutOfBounds(Square s) const {
     return (s.getRow() < SQ_ROW_LL || s.getRow() > SQ_ROW_UL ||
            s.getCol() < SQ_COL_LL || s.getCol() > SQ_COL_UL); 
 }
 
-bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer) {
+bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer) const {
 	int absRowDiff = 0, absColDiff = 0;
 
 	int startRow = 0, endRow = 0;
@@ -161,7 +165,9 @@ bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer) {
 			validPath = false;
 		
 		// Can move 1 space diagonally forward (left or right) to capture a piece
-        } else if (startCol == endCol || absColDiff != 1 || endRow - startRow != 1) {
+        } else if ((startCol == endCol || absColDiff != 1 || endRow - startRow != 1) && 
+                  (endSq.getPiece().pieceType != NOPIECE) &&
+                  (startSq.getPiece().pieceColor != endSq.getPiece().pieceColor)) {
 			validPath = false;
 		}
 
@@ -186,7 +192,9 @@ bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer) {
 			validPath = false;
 		
 		// Can move 1 space diagonally forward (left or right) to capture a piece
-		} else if (startCol == endCol || absColDiff != 1 || startRow - endRow != 1) {
+        } else if ((startCol == endCol || absColDiff != 1 || startRow - endRow != 1) && 
+                  (endSq.getPiece().pieceType != NOPIECE) && 
+                  (startSq.getPiece().pieceColor != endSq.getPiece().pieceColor)) {
 			validPath = false;
 		}
 
@@ -197,7 +205,7 @@ bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer) {
 	return validPath;	
 }
 
-bool Rules::isValidBishopMove(Square startSq, Square endSq) {
+bool Rules::isValidBishopMove(Square startSq, Square endSq) const {
 	int absRowDiff = 0, absColDiff = 0;
 	
 	absRowDiff = abs(endSq.getRow() - startSq.getRow());
@@ -206,7 +214,7 @@ bool Rules::isValidBishopMove(Square startSq, Square endSq) {
 	return (absRowDiff == absColDiff);
 }
 
-bool Rules::isValidKnightMove(Square startSq, Square endSq) {
+bool Rules::isValidKnightMove(Square startSq, Square endSq) const {
 	int absRowDiff = 0, absColDiff = 0;
 	
 	absRowDiff = abs(endSq.getRow() - startSq.getRow());
@@ -215,11 +223,11 @@ bool Rules::isValidKnightMove(Square startSq, Square endSq) {
 	return (absRowDiff == 2 && absColDiff == 1) || (absRowDiff == 1 && absColDiff == 2);
 }
 
-bool Rules::isValidRookMove(Square startSq, Square endSq) {
+bool Rules::isValidRookMove(Square startSq, Square endSq) const {
 	return (startSq.getRow() == endSq.getRow()) || (startSq.getCol() == endSq.getCol());
 }
 
-bool Rules::isValidQueenMove(Square startSq, Square endSq) {
+bool Rules::isValidQueenMove(Square startSq, Square endSq) const {
 	int absRowDiff = 0, absColDiff = 0;
 	
 	absRowDiff = abs(endSq.getRow() - startSq.getRow());
@@ -228,7 +236,7 @@ bool Rules::isValidQueenMove(Square startSq, Square endSq) {
 	return (absRowDiff == absColDiff) || (startSq.getRow() == endSq.getRow() || startSq.getCol() == endSq.getCol());
 }
 
-bool Rules::isValidKingMove(Square startSq, Square endSq) {
+bool Rules::isValidKingMove(Square startSq, Square endSq) const {
 	int absRowDiff = 0, absColDiff = 0;
 	
 	absRowDiff = abs(endSq.getRow() - startSq.getRow());
@@ -237,7 +245,7 @@ bool Rules::isValidKingMove(Square startSq, Square endSq) {
 	return (absRowDiff <= 1) && (absColDiff <= 1);
 }
 
-bool Rules::collision(Move m) {
+bool Rules::collision(Move m) const {
     int rowDiff = 0, colDiff = 0;
     int absRowDiff = 0, absColDiff = 0;
     int startRow = 0, startCol = 0;
@@ -261,7 +269,16 @@ bool Rules::collision(Move m) {
 
 	switch (startSq.getPiece().pieceType) {
 	case PAWN:
-        // TODO
+
+        // A hack to get the colCollision method to work with pawns.
+        // Normally the xxxCollision methods check every square upto the 
+        // end square. However, the pawn needs its end square checked so
+        // I need to pass row after the endRow to the method
+        if (startCol == endCol) {
+            collisionStatus = this->colCollision(startCol, startRow, endRow + 1);
+        }
+        
+        break;
 	case KNIGHT:
         // Knight's are the only piece that can move through other pieces
         collisionStatus = false;
@@ -287,25 +304,33 @@ bool Rules::collision(Move m) {
         collisionStatus = this->rowCollision(startRow, startCol, endCol);
         collisionStatus = collisionStatus || this->colCollision(startCol, startRow, endRow);
         collisionStatus = collisionStatus || this->diagCollision(startRow, endRow, startCol, endCol);
+        break;
 	default:
+        collisionStatus = true;
 	}
 
 	return collisionStatus;
 }
 
-bool Rules::isCheck() {
+bool Rules::isCheck() const {
+    // step through the King's diagonals to (the board's edge OR first encountered piece) 
+    //      AND look for the opponent's bishops and queens
+    // step through the King's rows to (the board's edges OR first encountered piece) 
+    //      AND look for the opponent's queens and rooks
+    // step through the King's columns to (the board's edges OR first encountered piece) 
+    //      AND look for the opponent's queens, rooks, and pawns.
 	return false;
 }
 
-bool Rules::isCheck(Board b) {
+bool Rules::isCheck(Board b) const {
 	return false;
 }
 
-bool Rules::isCheckmate() {
+bool Rules::isCheckmate() const {
 	return false;
 }
 
-bool Rules::isDraw() {
+bool Rules::isDraw() const {
 	return false;
 }
 
@@ -313,15 +338,15 @@ bool Rules::isDraw() {
 //	return false;
 //}
 
-bool Rules::isWhiteWin() {
+bool Rules::isWhiteWin() const {
 	return false;
 }
 
-bool Rules::isBlackWin() {
+bool Rules::isBlackWin() const {
 	return false;
 }
 
-bool Rules::diagCollision(int startRow, int endRow, int startCol, int endCol) {
+bool Rules::diagCollision(int startRow, int endRow, int startCol, int endCol) const {
     bool collisionStatus = false;
 
     if (startRow > endRow) {
@@ -356,7 +381,7 @@ bool Rules::diagCollision(int startRow, int endRow, int startCol, int endCol) {
 	return collisionStatus;
 }
 
-bool Rules::colCollision(int col, int startRow, int endRow) {
+bool Rules::colCollision(int col, int startRow, int endRow) const {
     bool collisionStatus = false;
 
     if (startRow > endRow) {
@@ -376,7 +401,7 @@ bool Rules::colCollision(int col, int startRow, int endRow) {
 	return collisionStatus;
 }
 
-bool Rules::rowCollision(int row, int startCol, int endCol) {
+bool Rules::rowCollision(int row, int startCol, int endCol) const {
     bool collisionStatus = false;
 
     if (startCol > endCol) {
