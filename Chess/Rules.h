@@ -25,7 +25,7 @@ public:
 	// Consider checkDiagonal, checkRow, checkColumn methods
 	bool isLegal(Move, Player) const;
 
-	bool isCheck() const;
+	bool isCheck(Square king) const;
     bool isCheck(Board b) const;
 	bool isCheckmate() const;
 	bool isDraw() const;

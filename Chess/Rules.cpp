@@ -312,7 +312,7 @@ bool Rules::collision(Move m) const {
 	return collisionStatus;
 }
 
-bool Rules::isCheck() const {
+bool Rules::isCheck(Square king) const {
     // step through the King's diagonals to (the board's edge OR first encountered piece) 
     //      AND look for the opponent's bishops and queens
     // step through the King's rows to (the board's edges OR first encountered piece) 
@@ -327,6 +327,8 @@ bool Rules::isCheck(Board b) const {
 }
 
 bool Rules::isCheckmate() const {
+    // See isCheck AND add condition that King cannot move out of check
+    //      (i.e. move king to all positions and recheck for check)
 	return false;
 }
 
