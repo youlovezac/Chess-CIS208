@@ -45,11 +45,11 @@ bool Rules::isLegal(Move m, Player currPlayer) const {
 		legalStatus = false;
 
 	// Can't place your own King in check
-	} else if (this->placesKingInCheck(m)) {
+	} else if (placesKingInCheck(m)) {
 		legalStatus = false;
 
 	// Movement path must match piece's established moving pattern
-	} else if (!(this->isValidMovementPath(m, currPlayer))) {
+	} else if (!(isValidMovementPath(m, currPlayer))) {
 		legalStatus = false;
 
 	// Can't move through any pieces that occupy the movement path
@@ -74,7 +74,7 @@ bool Rules::placesKingInCheck(Move m) const {
 	Board b = *pBoard;
 	b.makeMove(m);
 	
-	return this->isCheck(b);
+	return isCheck(b);
 
 }
 
@@ -275,9 +275,8 @@ bool Rules::collision(Move m) const {
         // end square. However, the pawn needs its end square checked so
         // I need to pass row after the endRow to the method
         if (startCol == endCol) {
-            collisionStatus = this->colCollision(startCol, startRow, endRow + 1);
+            collisionStatus = colCollision(startCol, startRow, endRow + 1);
         }
-        
         break;
 	case KNIGHT:
         // Knight's are the only piece that can move through other pieces
@@ -285,25 +284,20 @@ bool Rules::collision(Move m) const {
         break;
 
 	case BISHOP:
-        collisionStatus = this->diagCollision(startRow, endRow, startCol, endCol);
+        collisionStatus = diagCollision(startRow, endRow, startCol, endCol);
         break;
 	case ROOK:
-        collisionStatus = this->rowCollision(startRow, startCol, endCol);
-        collisionStatus = collisionStatus || this->colCollision(startCol, startRow, endRow);
+        collisionStatus = rowCollision(startRow, startCol, endCol);
+        collisionStatus = collisionStatus || colCollision(startCol, startRow, endRow);
         break;
 	case QUEEN:
         // NOTE: The Queen & King have the same type of valid movements with the length of
         // each movement being the differing factor. But, since I pass the startRow/Col, endRow/Col
-        // to each method I should be able to just let this drop through to the KING call.
-
-        // collisionStatus = this->rowCollision(startRow, startCol, endCol);
-        // collisionStatus = collisionStatus || this->colCollision(startCol, startRow, endRow);
-        // collisionStatus = collisionStatus || this->diagCollision(startrow, endRow, startCol, endCol);
-        // break;
+        // to each method I should be able to just let this drop through to the KING case.
 	case KING:
-        collisionStatus = this->rowCollision(startRow, startCol, endCol);
-        collisionStatus = collisionStatus || this->colCollision(startCol, startRow, endRow);
-        collisionStatus = collisionStatus || this->diagCollision(startRow, endRow, startCol, endCol);
+        collisionStatus = rowCollision(startRow, startCol, endCol);
+        collisionStatus = collisionStatus || colCollision(startCol, startRow, endRow);
+        collisionStatus = collisionStatus || diagCollision(startRow, endRow, startCol, endCol);
         break;
 	default:
         collisionStatus = true;
@@ -312,9 +306,19 @@ bool Rules::collision(Move m) const {
 	return collisionStatus;
 }
 
-bool Rules::isCheck(Square king) const {
+bool Rules::isCheck(Square king, Player currPlayer) const {
+	
     // step through the King's diagonals to (the board's edge OR first encountered piece) 
     //      AND look for the opponent's bishops and queens
+	for (int i = 1; /* .............. */ ; i++) {
+		
+	}
+    for (int i = 1; i < abs(endRow - startRow); i++) {
+        if (pBoard->getSquare(startRow - i, startCol - i).getPiece() != NOPIECE) {
+            collisionStatus = true;
+        }
+    }
+
     // step through the King's rows to (the board's edges OR first encountered piece) 
     //      AND look for the opponent's queens and rooks
     // step through the King's columns to (the board's edges OR first encountered piece) 
