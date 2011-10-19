@@ -11,9 +11,6 @@ void Display::enableFileMode(const char *file) {
 	
 }
 
-//move = display.getMove(board, rules, currentPlayer); // move returned is legal
-// bool isLegal(Move, Player);
-// Move(int, int, int, int, Board*); 
 Move Display::getMove(Board* board, Rules rules, Player currentPlayer) {
 	if(currentPlayer.playerColor == BLACK) isWhite = false;
 	else isWhite = true;
