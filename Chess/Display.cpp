@@ -1,5 +1,7 @@
 #include "Display.h"
 #include "Move.h"
+#include "Rules.h"
+using namespace std;
 
 void Display::setUpPlayers(Player wPlayer, Player bPlayer) {
 	isWhite = true;
@@ -14,7 +16,8 @@ void Display::enableFileMode(const char *file) {
 //move = display.getMove(board, rules, currentPlayer); // move returned is legal
 // bool isLegal(Move, Player);
 // Move(int, int, int, int, Board*); 
-Move Display::getMove(Board* board, Rules rules, Player currentPlayer) {
+Move Display::getMove(Board& board, Rules rules, Player currentPlayer) {
+	Move tempMove;
 	if(currentPlayer.playerColor == BLACK) isWhite = false;
 	else isWhite = true;
 	int startr=0, startc=0, endr=0, endc=0;
@@ -23,7 +26,7 @@ Move Display::getMove(Board* board, Rules rules, Player currentPlayer) {
 	if(enableFileMode) {
 		chessfile >> startr >> startc >> endr >> endc;
 		Move tempMove(startr, startc, endr, endc, board);
-		if(isLegal(tempMove, currentPlayer)) readytomoveon = true;
+		if(rules.isLegal(tempMove, currentPlayer)) readytomoveon = true;
 	}
 		
 	while(!readytomoveon) {
@@ -35,8 +38,10 @@ Move Display::getMove(Board* board, Rules rules, Player currentPlayer) {
 		cin >> endr;
 		cout << "Enter the requested column: ";
 		cin >> endc;
-		Move tempMove(startr, startc, endr, endc, board);
-		if(isLegal(tempMove, currentPlayer)) readytomoveon = true;
+		tempMove.setStart(startr, startc);
+		tempMove.setDestination(endr, endc);
+		tempMove.setBoard(board);
+		if(rules.isLegal(tempMove, currentPlayer)) readytomoveon = true;
 	}
 	retMove = tempMove;
 	return retMove;

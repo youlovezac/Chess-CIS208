@@ -3,7 +3,6 @@
 
 #include "misc.h"
 
-
 class Square {
 public:
 	Square(); // Default constructor
@@ -15,9 +14,10 @@ public:
 	Piece getPiece() const;
 	int getRow() const;
 	int getCol() const;
+	void setRow(int);
+	void setCol(int);
 	void setColor(Color);
 	void setPiece(Piece);
-	// Consider adding methods to get square coordinates
 private:
 	int row; // Rank
 	int col; // File

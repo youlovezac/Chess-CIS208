@@ -1,20 +1,22 @@
 #ifndef MOVE_H 
 #define MOVE_H 
 
-#include "Square.h"
-#include "Board.h"
 
-class Move 
-{ 
+
+class Board;
+class Square;
+class Move {
 public: 
-	Move(int, int, int, int, Board); 
-	Square getStart(); 
-	Square getDestination(); 
-
+    Move();
+	Move(int, int, int, int, Board&); // this should be what we need.
+    void setStart(int, int);
+    void setDestination(int, int);
+	void setBoard(Board&);
+    Square getStart();
+    Square getDestination();
 private:
-	Board* pboard;
-	Square start; 
-	Square destination;
-}; 
-
-#endif MOVE_H 
+    Board* pboard;
+    Square *start, *destination;
+};
+ 
+#endif

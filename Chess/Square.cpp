@@ -42,6 +42,14 @@ Piece Square::getPiece() const {
 	return currPiece;
 }
 
+void Square::setRow(int r) {
+	row = r;
+}
+
+void Square::setCol(int c) {
+	col = c;
+}
+
 void Square::setColor(Color c) {
 	squareColor = c;
 }

@@ -10,7 +10,7 @@
 #include "misc.h"
 #include "Move.h"
 
-using namespace std;
+// using namespace std;
 
 int main()
 {

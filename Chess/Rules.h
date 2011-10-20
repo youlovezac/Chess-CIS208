@@ -9,6 +9,8 @@
 
 // Author: Josh Halstead
 
+#include "misc.h"
+
 class Rules {
 public:
 
@@ -23,35 +25,39 @@ public:
 	// check for castling
 	// check for en passant
 	// Consider checkDiagonal, checkRow, checkColumn methods
-	bool isLegal(Move, Player) const;
+	bool isLegal(Move, Player);
 
-	bool isCheck(Square, Player) const;
-    bool isCheck(Board) const;
-	bool isCheckmate() const;
-	bool isDraw() const;
+	bool isCheck(Square, Player);
+    bool isCheck(Board);
+	bool isCheckmate();
+	bool isDraw();
 	// bool isStalemate(moveHistory);
-	bool isWhiteWin() const;
-	bool isBlackWin() const;
+	bool isWhiteWin();
+	bool isBlackWin();
 
 private:
 	Board* pBoard;
 
-	bool placesKingInCheck(Move) const;
+	bool placesKingInCheck(Move) ;
 	
-	bool isValidMovementPath(Move, Player) const;
-	bool isValidPawnMove(Square startSq, Square endSq, Player currPlayer) const;
-	bool isValidBishopMove(Square startSq, Square endSq) const;
-	bool isValidKnightMove(Square startSq, Square endSq) const;
-	bool isValidRookMove(Square startSq, Square endSq) const;
-	bool isValidQueenMove(Square startSq, Square endSq) const;
-	bool isValidKingMove(Square startSq, Square endSq) const;
+	bool isValidMovementPath(Move, Player);
+	bool isValidPawnMove(Square startSq, Square endSq, Player currPlayer);
+	bool isValidBishopMove(Square startSq, Square endSq);
+	bool isValidKnightMove(Square startSq, Square endSq);
+	bool isValidRookMove(Square startSq, Square endSq);
+	bool isValidQueenMove(Square startSq, Square endSq);
+	bool isValidKingMove(Square startSq, Square endSq);
 	
-    bool isOutOfBounds(Square s) const;
+    bool isOutOfBounds(Square s);
 
-	bool collision(Move) const;
-	bool diagCollision(int startRow, int endRow, int startCol, int endCol) const;
-	bool rowCollision(int row, int startCol, int endCol) const;
-	bool colCollision(int col, int startRow, int endRow) const;
+	bool collision(Move);
+	bool diagCollision(int startRow, int endRow, int startCol, int endCol);
+	bool rowCollision(int row, int startCol, int endCol);
+	bool colCollision(int col, int startRow, int endRow);
+
+	bool isThreat(Color pColor, int row, int col, int threatType);
+	bool isPawnThreat(Color pColor, int row, int col);
+	bool isKnightThreat(Color pColor, int row, int col);
 
 };
 
