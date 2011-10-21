@@ -30,6 +30,10 @@ Square& Square::operator=(const Square& s) {
 	return *this;
 }
 
+bool Square::operator!=(const Square& s) {
+	return row != s.getRow() && col != s.getCol();
+}
+
 bool Square::operator==(const Square& s) {
 	return row == s.getRow() && col == s.getCol();
 }
@@ -43,11 +47,21 @@ Piece Square::getPiece() const {
 }
 
 void Square::setRow(int r) {
-	row = r;
+	if (r <= SQ_UL && r >= SQ_LL) 
+		row = r;
 }
 
 void Square::setCol(int c) {
-	col = c;
+	if (c <= SQ_UL && c >= SQ_LL)
+		col = c;
+}
+
+int Square::getRow() const {
+	return row;
+}
+
+int Square::getCol() const {
+	return col;
 }
 
 void Square::setColor(Color c) {

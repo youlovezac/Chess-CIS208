@@ -1,8 +1,4 @@
 #include "Board.h"
-#include "Square.h"
-#include "Move.h"
-#include "misc.h"
-using namespace std;
 
 void Board::setUp(){
 	Square filler; // temporary square object used to fill each square
@@ -47,11 +43,11 @@ void Board::setUp(){
 				filler.setRow(i);
 				filler.setPiece(occupant);
 				filler.setColor(squareColor);
-				*chessBoard[j][i] = filler;
+				chessBoard[j][i] = filler;
 				
 			}
 		}
-		if(j == 1 || j == 6){ // if second or second to last rank (the pawn rows).
+		else if(j == 1 || j == 6){ // if second or second to last rank (the pawn rows).
 			occupant.pieceType = PAWN; // will likely change
 			for(int i = 0; i < 8; i++){
 				if(j == 6) // if second to farthest row
@@ -76,7 +72,7 @@ void Board::setUp(){
 				filler.setRow(i);
 				filler.setPiece(occupant);
 				filler.setColor(squareColor);
-				*chessBoard[j][i] = filler;
+				chessBoard[j][i] = filler;
 			}
 		}
 		else{ // the rest will be empty squares
@@ -100,7 +96,7 @@ void Board::setUp(){
 				filler.setRow(i);
 				filler.setPiece(occupant);
 				filler.setColor(squareColor);
-				*chessBoard[j][i] = filler;
+				chessBoard[j][i] = filler;
 			}
 		}
 
@@ -111,15 +107,9 @@ void Board::setUp(){
 Board& Board::operator=(const Board& board){
 	for(int i = 0; i < 8; i++) {
 		for(int j = 0; j < 8; j ++) {
-			*chessBoard[i][j] = *board.chessBoard[i][j];
+			chessBoard[i][j] = board.chessBoard[i][j];
 		}
 	}
-	return *this;
-}
-
-Board& Board::operator--(){
-	turns--;
-	// chessBoard = boardHistory.chessBoard[turns]; // There will be more to this once I figure out how this will interact with display.
 	return *this;
 }
 
@@ -132,43 +122,24 @@ Board::Board()
 Board::Board(const Board& board){ // copy constructor
 	for(int i = 0; i < 8; i++) {
 		for(int j = 0; j < 8; j ++) {
-			*chessBoard[i][j] = *board.chessBoard[i][j];
+			chessBoard[i][j] = board.chessBoard[i][j];
 		}
 	}
 }
 
-void Board::makeMove(Move inMove){
-	// Update the board so that the piece within the starting square is in the destination square. 
-	Square start = inMove.getStart();
-	Piece movedPiece, emptyPiece;
-	int startRank = start.getRow();
-	int startFile = start.getCol();
-	Square dest = inMove.getDestination();
-	int destRank = dest.getRow();
-	int destFile = dest.getCol();
-
-	movedPiece = start.getPiece(); // moves the piece
-	emptyPiece.pieceType = NOPIECE;
-
-	setSquare(startRank, startFile, emptyPiece); // removes the piece from the starting square
-	setSquare(destRank, destFile, movedPiece);
-
-	// will get much more complex as pawn promotion, en passant, and castling are taken into account
-	turns++;
-	updateBoardHistory();
-}
 Square Board::getSquare(int rank, int file){ 
-	return *chessBoard[rank][file]; // returns the corresponding square
+	return chessBoard[rank][file]; // returns the corresponding square
 }
-
 
 void Board::setSquare(int rank, int file, Piece p){ // 
-	(*chessBoard[rank][file]).setPiece(p);
+	chessBoard[rank][file].setPiece(p);
 }
 
-void Board::updateBoardHistory() {
-	*boardHistory[turns] = (*this); 
-	// using the turn number as an index, copies the current board-state into an element of the boardHistory array
+void Board::incrementTurn() {
+	turns++;
 }
 
+void Board::decrementTurn() {
+	turns--;
+}
 

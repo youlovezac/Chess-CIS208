@@ -9,6 +9,8 @@
 
 // Author: Josh Halstead
 
+#include "Move.h"
+#include "Board.h"
 #include "misc.h"
 
 class Rules {
@@ -17,23 +19,15 @@ public:
 	Rules();
 	Rules(Board*);
 
-	// check correct color is being moved
-	// check piece has capacity to move to that square
-	// check that destination is vacant or occupied by opponent
-	// check that it doesn't place you into check
-	// check if anything is in the way (e2e4, nothing is on e3 unless it's a knight)
-	// check for castling
-	// check for en passant
-	// Consider checkDiagonal, checkRow, checkColumn methods
 	bool isLegal(Move, Player);
 
 	bool isCheck(Square, Player);
-    bool isCheck(Board);
-	bool isCheckmate();
+    bool isCheck(Board); // TODO
+	bool isCheckmate(); // TODO
 	bool isDraw();
-	// bool isStalemate(moveHistory);
-	bool isWhiteWin();
-	bool isBlackWin();
+	// bool isStalemate(moveHistory); // TODO
+	bool isWhiteWin(); // TODO
+	bool isBlackWin(); // TODO
 
 private:
 	Board* pBoard;
