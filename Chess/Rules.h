@@ -55,4 +55,4 @@ private:
 
 };
 
-#endif RULES_H
+#endif

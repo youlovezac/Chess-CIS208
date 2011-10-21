@@ -1,5 +1,5 @@
 // Author: Josh Halstead
-#include <math.h>
+#include <cstdlib>
 #include "Rules.h"
 
 // Defines the generic threat types
