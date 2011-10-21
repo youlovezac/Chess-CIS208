@@ -10,7 +10,7 @@ public:
 
 	Square& operator=(const Square& s); // Overloaded assignment operator
 	bool operator==(const Square& s); // Equivalance operator
-    bool operator!=(const Square& s); // Inequivalence operator
+	bool operator!=(const Square& s); // Inequivalence operator
 
 	int getRow() const;
 	int getCol() const;
@@ -28,4 +28,4 @@ private:
 	Piece currPiece;
 };
 
-#endif SQUARE_H
+#endif
