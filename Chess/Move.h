@@ -5,20 +5,17 @@
 
 class Move {
 public: 
-    Move();
-	Move(int, int, int, int, Board&); // this should be what we need.
-
+	Move();
+	Move(int, int, int, int, Board&);
 	void setBoard(Board&);
-    void setStart(int, int);
-    void setDestination(int, int);
-
-    Square getStart();
-    Square getDestination();
-
-	void execute(); // Replaces makeMove in Board to remove circular reference issues 
+	void setStart(int, int);
+	void setDestination(int, int);
+	Square getStart();
+	Square getDestination();
+	void execute();
 private:
-    Board* pboard;
-    Square start, destination;
+	Board* pboard;
+	Square start, destination;
 };
  
 #endif

@@ -1,29 +1,54 @@
 #ifndef SQUARE_H
 #define SQUARE_H
 
-#include "misc.h"
+#define SQ_UL 7
+#define SQ_LL 0
+
+typedef enum Color { 
+	WHITE = 0,
+	BLACK = 1
+} Color;
+
+typedef enum PieceType {
+	NOPIECE = 0,
+	PAWN = 1,
+	KNIGHT = -3,
+	BISHOP = 3,
+	ROOK = 5,
+	QUEEN = 9,
+	KING = 1000
+} PieceType;
+
+typedef struct Piece {
+	Color pieceColor;
+	PieceType pieceType;
+} Piece;
 
 class Square {
 public:
-	Square(); // Default constructor
-	Square(const Square& s); // Copy constructor
-
-	Square& operator=(const Square& s); // Overloaded assignment operator
-	bool operator==(const Square& s); // Equivalance operator
-	bool operator!=(const Square& s); // Inequivalence operator
-
+	Square();
+	Square(const Square& s);
+	Square& operator=(const Square& s);
+	bool operator==(const Square& s);
+	bool operator!=(const Square& s);
 	int getRow() const;
 	int getCol() const;
-	void setRow(int);
-	void setCol(int);
-
+	void setRow(int r) {
+		if(r <= SQ_UL && r >= SQ_LL) row = r;
+	}
+	void setCol(int c) {
+		if(c <= SQ_UL && c >= SQ_LL) col = c;
+	}
 	Color getColor() const;
 	Piece getPiece() const;
-	void setColor(Color);
-	void setPiece(Piece);
+	void setColor(Color c) {
+		squareColor = c;
+	}
+	void setPiece(Piece p) {
+		currPiece = p;
+	}
 private:
-	int row; // Rank
-	int col; // File
+	int row, col;
 	Color squareColor;
 	Piece currPiece;
 };

@@ -2,11 +2,12 @@
 #define DISPLAY_H
 
 #include "Move.h"
-#include "misc.h"
 
 class Display {
 public:
-        Move getMove(Board& b, Player currentPlayer);
+        Move getMove(Board& b, Color playerColor);
+protected:
+	
 };
 
 #endif
