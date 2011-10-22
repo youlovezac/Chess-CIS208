@@ -2,11 +2,12 @@
 #define DISPLAY_H
 
 #include "Move.h"
+#include "Rules.h"
 
 class Display {
 public:
-        Move getMove(Board& b, Color playerColor);
-protected:
+        Move getMove(Board& b, Rules& r, Color playerColor);
+private:
 	
 };
 

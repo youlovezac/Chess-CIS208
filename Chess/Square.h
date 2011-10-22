@@ -33,20 +33,12 @@ public:
 	bool operator!=(const Square& s);
 	int getRow() const;
 	int getCol() const;
-	void setRow(int r) {
-		if(r <= SQ_UL && r >= SQ_LL) row = r;
-	}
-	void setCol(int c) {
-		if(c <= SQ_UL && c >= SQ_LL) col = c;
-	}
+	void setRow(int r) { if(r <= SQ_UL && r >= SQ_LL) row = r; }
+	void setCol(int c) { if(c <= SQ_UL && c >= SQ_LL) col = c; }
 	Color getColor() const;
 	Piece getPiece() const;
-	void setColor(Color c) {
-		squareColor = c;
-	}
-	void setPiece(Piece p) {
-		currPiece = p;
-	}
+	void setColor(Color c) { squareColor = c; }
+	void setPiece(Piece p) { currPiece = p; }
 private:
 	int row, col;
 	Color squareColor;

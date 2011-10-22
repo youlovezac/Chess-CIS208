@@ -14,7 +14,7 @@ public:
 	Rules(Board*);
 	bool isLegal(Move, Color);
 	bool isCheck(Square, Color);
-protected:
+private:
 	Board* pBoard;
 	bool placesKingInCheck(Move);
 	bool isValidMovementPath(Move, Color);
