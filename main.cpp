@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include "Board.h"
 #include "Display.h"
@@ -17,6 +18,18 @@ int main(int argc, char **argv) {
 		move = d.getMove(b, r, player);
 		move.execute();
 		player = (player==BLACK) ? WHITE : BLACK;
+		ofstream logfile("Log.txt", ifstream::out);
+
+		for(int j=0; j<8; j++) {
+			for(int i=0; i<8; i++) {
+				Square s = b.getSquare(j, i);
+				int row = s.getRow();
+				int col = s.getCol();
+				Color c = s.getColor();
+				Piece p = s.getPiece();
+				logfile << row << " " << col << " " << c << " " << p << endl;
+			}
+		}
 	}
 	return 0;
 }

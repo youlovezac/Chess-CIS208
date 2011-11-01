@@ -10,8 +10,7 @@ public:
         Move getMove(Board& b, Rules& r, Color playerColor);
 private:
 	bool filemode;
-	char *ofilename, *ifilename; // argv is char*, not string
-	FILE *ofile, *ifile;
+	char *filename; // argv is char*, not string
 };
 
 #endif

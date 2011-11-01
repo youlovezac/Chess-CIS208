@@ -5,8 +5,8 @@
 #define SQ_LL 0
 
 typedef enum Color { 
-	WHITE = 0,
-	BLACK = 1
+	WHITE,
+	BLACK
 } Color;
 
 typedef enum PieceType {

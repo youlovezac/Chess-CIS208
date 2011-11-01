@@ -8,12 +8,7 @@ Display::Display(int argc, char **argv) {
 	if(argc < 2) filemode = false;
 	else {
 		filemode = true;
-		ifilename = argv[1];
-		ifile = fopen(ifilename, "r");
-		if(argc == 3) {
-			ofilename = argv[2];
-			ofile = fopen(ofilename, "w");
-		}
+		filename = argv[1];
 	}
 }
 
