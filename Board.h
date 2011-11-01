@@ -11,7 +11,6 @@ public:
 	Board(const Board& board);
 	void setSquare(int rank, int file, Piece p);
 	Square getSquare(int rank, int file);
-	void setUp();
 	void incrementTurn();
 	void decrementTurn();
 private:

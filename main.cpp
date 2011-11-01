@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdio.h>
 #include "Board.h"
 #include "Display.h"
 #include "Rules.h"
@@ -8,13 +9,15 @@ using namespace std;
 
 int main(int argc, char **argv) {
 	Move move;
-	Display d;
+	Display d(argc, argv);
 	Board b;
 	Rules r;
 	Color player = BLACK;
-	
-	move = d.getMove(b, r, player);
-
+	while(1) {
+		move = d.getMove(b, r, player);
+		move.execute();
+		player = (player==BLACK) ? WHITE : BLACK;
+	}
 	return 0;
 }
 
