@@ -1,37 +1,43 @@
-﻿Build started 10/18/2011 11:35:49 PM.
-     1>Project "Z:\Documents\Chess-CIS208\Chess\Chess.vcxproj" on node 2 (rebuild target(s)).
-     1>_PrepareForClean:
-         Deleting file "Debug\Chess.lastbuildstate".
-       InitializeBuildStatus:
-         Touching "Debug\Chess.unsuccessfulbuild".
+﻿Build started 10/21/2011 6:01:30 AM.
+     1>Project "Z:\Documents\Chess-CIS208\Chess\Chess.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\Chess.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Board.cpp Display.cpp main.cpp Move.cpp Rules.cpp Square.cpp
          Square.cpp
          Rules.cpp
          Move.cpp
          main.cpp
-     1>z:\documents\chess-cis208\chess\display.h(19): error C2146: syntax error : missing ';' before identifier 'chessfile'
-     1>z:\documents\chess-cis208\chess\display.h(19): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-     1>z:\documents\chess-cis208\chess\display.h(19): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-     1>z:\documents\chess-cis208\chess\main.cpp(28): error C2039: 'showPosition' : is not a member of 'Display'
-                 z:\documents\chess-cis208\chess\display.h(11) : see declaration of 'Display'
-     1>z:\documents\chess-cis208\chess\main.cpp(30): error C2039: 'isGameOver' : is not a member of 'Rules'
-                 z:\documents\chess-cis208\chess\rules.h(14) : see declaration of 'Rules'
-     1>z:\documents\chess-cis208\chess\main.cpp(30): fatal error C1903: unable to recover from previous error(s); stopping compilation
          Display.cpp
-     1>z:\documents\chess-cis208\chess\display.h(15): error C2061: syntax error : identifier 'Board'
-     1>z:\documents\chess-cis208\chess\display.h(19): error C2146: syntax error : missing ';' before identifier 'chessfile'
-     1>z:\documents\chess-cis208\chess\display.h(19): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-     1>z:\documents\chess-cis208\chess\display.h(19): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-     1>z:\documents\chess-cis208\chess\display.cpp(12): error C2065: 'chessfile' : undeclared identifier
-     1>z:\documents\chess-cis208\chess\display.cpp(12): error C2228: left of '.open' must have class/struct/union
-                 type is ''unknown-type''
-     1>z:\documents\chess-cis208\chess\display.cpp(19): error C2511: 'Move Display::getMove(Board &,Rules,Player)' : overloaded member function not found in 'Display'
-                 z:\documents\chess-cis208\chess\display.h(11) : see declaration of 'Display'
          Board.cpp
          Generating Code...
-     1>Done Building Project "Z:\Documents\Chess-CIS208\Chess\Chess.vcxproj" (rebuild target(s)) -- FAILED.
+       ManifestResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\Chess.exe.embed.manifest.res" Debug\Chess_manifest.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Z:\Documents\Chess-CIS208\Debug\Chess.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Chess.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"Z:\Documents\Chess-CIS208\Debug\Chess.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Z:\Documents\Chess-CIS208\Debug\Chess.lib" /MACHINE:X86 Debug\Chess.exe.embed.manifest.res
+         Debug\Board.obj
+         Debug\Display.obj
+         Debug\main.obj
+         Debug\Move.obj
+         Debug\Rules.obj
+         Debug\Square.obj
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\Chess.exe.embed.manifest" /manifest Debug\Chess.exe.intermediate.manifest
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\Chess.exe.embed.manifest.res" Debug\Chess_manifest.rc 
+       LinkEmbedManifest:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Z:\Documents\Chess-CIS208\Debug\Chess.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Chess.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"Z:\Documents\Chess-CIS208\Debug\Chess.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Z:\Documents\Chess-CIS208\Debug\Chess.lib" /MACHINE:X86 Debug\Chess.exe.embed.manifest.res
+         Debug\Board.obj
+         Debug\Display.obj
+         Debug\main.obj
+         Debug\Move.obj
+         Debug\Rules.obj
+         Debug\Square.obj
+         Chess.vcxproj -> Z:\Documents\Chess-CIS208\Debug\Chess.exe
+       FinalizeBuildStatus:
+         Deleting file "Debug\Chess.unsuccessfulbuild".
+         Touching "Debug\Chess.lastbuildstate".
+     1>Done Building Project "Z:\Documents\Chess-CIS208\Chess\Chess.vcxproj" (build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:01.89
+Time Elapsed 00:00:06.97
