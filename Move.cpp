@@ -31,7 +31,7 @@ Square Move::getDestination() {
 }
 
 void Move::execute() {
-	Piece emptyPiece = { WHITE, NOPIECE };
+	Piece emptyPiece = { NOCOLOR, NOPIECE };
 	Piece movedPiece = start.getPiece();
 	pboard->setSquare(start.getRow(), start.getCol(), emptyPiece);
 	pboard->setSquare(destination.getRow(), destination.getCol(), movedPiece);
