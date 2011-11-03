@@ -14,10 +14,21 @@ Display::Display(int argc, char **argv) {
 
 Move Display::getMove(Board& b, Rules& r, Color playerColor) {
 	if(!filemode) {
-		for(int j=0; j<8; j++) {
-			for(int i=0; i<8; i++) {
-				Color c = b.getSquare(j, i).getPiece().pieceColor;
-				PieceType p = b.getSquare(j, i).getPiece().pieceType;
+        cout << "  | 01234567 |" << endl;
+        cout << "----------------" << endl;
+        
+        // In order to orient the board correctly, the first row sent to the console should be 
+        // the last row of the board and so on.
+        //
+        // Also, I switched the row and col notation to the standard convention
+        // Previously, row=j and col=i
+        // Now, row=i and col=j
+		for(int i=7; i>=0; i--) {
+            cout << i << " | ";
+
+		    for(int j=0; j<8; j++) {
+				Color c = b.getSquare(i, j).getPiece().pieceColor;
+				PieceType p = b.getSquare(i, j).getPiece().pieceType;
 				if(p==NOPIECE) cout << " ";
 				else if(c==BLACK) {
 					if(p==PAWN) cout << "p";
@@ -35,8 +46,10 @@ Move Display::getMove(Board& b, Rules& r, Color playerColor) {
 					else if(p==KING) cout << "K";
 				}
 			}
-			cout << endl;
+            cout << " | " << i << endl;
 		}
+        cout << "----------------" << endl;
+        cout << "  | 01234567 |" << endl;
 
 		int startr=0, startc=0, endr=0, endc=0;
 		while(1) {
