@@ -11,7 +11,7 @@
 
 #include "Move.h"
 #include "Board.h"
-#include "misc.h"
+#include "Square.h"
 
 class Rules {
 public:
@@ -19,9 +19,9 @@ public:
 	Rules();
 	Rules(Board*);
 
-	bool isLegal(Move, Player);
+	bool isLegal(Move, Color);
 
-	bool isCheck(Square, Player);
+	bool isCheck(Square, Color);
     bool isCheck(Board); // TODO
 	bool isCheckmate(); // TODO
 	bool isDraw();
@@ -34,8 +34,8 @@ private:
 
 	bool placesKingInCheck(Move) ;
 
-	bool isValidMovementPath(Move, Player);
-	bool isValidPawnMove(Square startSq, Square endSq, Player currPlayer);
+	bool isValidMovementPath(Move, Color);
+	bool isValidPawnMove(Square startSq, Square endSq, Color currPlayer);
 	bool isValidBishopMove(Square startSq, Square endSq);
 	bool isValidKnightMove(Square startSq, Square endSq);
 	bool isValidRookMove(Square startSq, Square endSq);

@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include "Rules.h"
+#include "Square.h"
 
 // Defines the generic threat types
 const int DIAG = 0;
@@ -21,22 +22,23 @@ Rules::Rules(Board* pointer) {
 // check if anything is in the way (e.g. e2e4, nothing is on e3 unless it's a knight)
 // TODO check for castling
 // TODO check for en passant
-bool Rules::isLegal(Move m, Player currPlayer) {
+bool Rules::isLegal(Move m, Color currPlayerColor) {
 	bool legalStatus = true;
 	Square startSq = m.getStart();
 	Square endSq = m.getDestination();
 	Piece p = startSq.getPiece();
 
 	// Player can't move the other player's color
-	if (p.pieceColor != currPlayer.playerColor) {
+	if (p.pieceColor != currPlayerColor) {
 		legalStatus = false;
 
 	// Can't move onto a square that one of your piece occupies
-	} else if (endSq.getPiece().pieceColor == currPlayer.playerColor) {
+	} else if (endSq.getPiece().pieceColor == currPlayerColor) {
 		legalStatus = false;
 
 	// if end square isn't empty only matters if pawn is moving in a non-capture capacity
 	// otherwise the piece will simply capture the occupant
+    // TODO Double check this check.
 	} else if (endSq.getPiece().pieceType != NOPIECE) {
 		legalStatus = false;
 
@@ -45,7 +47,7 @@ bool Rules::isLegal(Move m, Player currPlayer) {
 		legalStatus = false;
 
 	// Movement path must match piece's established moving pattern
-	} else if (!(isValidMovementPath(m, currPlayer))) {
+	} else if (!isValidMovementPath(m, currPlayerColor)) {
 		legalStatus = false;
 
 	// Can't move through any pieces that occupy the movement path
@@ -75,7 +77,7 @@ bool Rules::placesKingInCheck(Move m) {
 	return isCheck(b);
 }
 
-bool Rules::isValidMovementPath(Move m, Player currPlayer)  {
+bool Rules::isValidMovementPath(Move m, Color currPlayerColor)  {
 	bool validPath = true;
 
 	Square startSq = m.getStart();
@@ -84,14 +86,14 @@ bool Rules::isValidMovementPath(Move m, Player currPlayer)  {
 	// A move must consist of at least two different squares
 	// Otherwise the player can just pass their turn by entering
 	// the same square for start and end squares.
-	validPath = (startSq != endSq);
+	validPath = (startSq.getRow() != endSq.getRow() || startSq.getCol() != endSq.getCol());
 
 	// The start and end squares must be within the confines of the board
     validPath = !(isOutOfBounds(startSq) || isOutOfBounds(endSq));
 
-	switch (m.getStart().getPiece().pieceType) {
+	switch (startSq.getPiece().pieceType) {
 	case PAWN:
-		validPath = isValidPawnMove(startSq, endSq, currPlayer);
+		validPath = isValidPawnMove(startSq, endSq, currPlayerColor);
 		break;
 	case BISHOP:
 		validPath = isValidBishopMove(startSq, endSq);
@@ -116,11 +118,11 @@ bool Rules::isValidMovementPath(Move m, Player currPlayer)  {
 }
 
 bool Rules::isOutOfBounds(Square s)  {
-    return (s.getRow() < SQ_LL || s.getRow() > SQ_UL ||
-           s.getCol() < SQ_LL || s.getCol() > SQ_UL); 
+    return (SQ_LL >= s.getRow() || s.getRow() <= SQ_UL ||
+           SQ_LL >= s.getCol() || s.getCol() <= SQ_UL); 
 }
 
-bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer)  {
+bool Rules::isValidPawnMove(Square startSq, Square endSq, Color currPlayerColor)  {
 	int absRowDiff = 0, absColDiff = 0;
 
 	int startRow = 0, endRow = 0;
@@ -143,7 +145,7 @@ bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer)  {
 
 	// Need current player's color since they move in opposing directions
 	// White moves forward from Row 1 to Row 8
-	if (currPlayer.playerColor == WHITE) {
+	if (currPlayerColor == WHITE) {
 
 		// Can't exist on White's "back row"
 		if (startRow < whitePawnStartingRow) {
@@ -170,7 +172,7 @@ bool Rules::isValidPawnMove(Square startSq, Square endSq, Player currPlayer)  {
 
 	}
 	// Black moves forward from Row 8 to Row 1
-	else if (currPlayer.playerColor == BLACK) {
+	else if (currPlayerColor == BLACK) {
 
 		// Can't exist on Black's "back row"
 		if (startRow > blackPawnStartingRow) {
@@ -303,40 +305,39 @@ bool Rules::collision(Move m)  {
 	return collisionStatus;
 }
 
-bool Rules::isCheck(Square king, Player currPlayer) {
+bool Rules::isCheck(Square king, Color currPlayerColor) {
 	int kRow, kCol;
 	bool checkStatus;
-	Color pColor = currPlayer.playerColor;
 
 	kRow = king.getRow();
 	kCol = king.getCol();
 
 	// Pawn threat detection
-	checkStatus = isThreat(pColor, kRow, kCol, PAWN);
+	checkStatus = isThreat(currPlayerColor, kRow, kCol, PAWN);
 
 	// Knight threat detection
-	checkStatus = checkStatus || isThreat(pColor, kRow, kCol, KNIGHT);
+	checkStatus = checkStatus || isThreat(currPlayerColor, kRow, kCol, KNIGHT);
 
 	// General threat detection for everything but Pawns and Knights
 	for (int i = SQ_LL + 1; i <= SQ_UL && !checkStatus; ++i) {
 
 		// Diagonal threat detection.
-		checkStatus = checkStatus || isThreat(pColor, kRow + i, kCol + i, DIAG); // 1st quadrant diag
-		checkStatus = checkStatus || isThreat(pColor, kRow - i, kCol + i, DIAG); // 2nd quadrant diag
-		checkStatus = checkStatus || isThreat(pColor, kRow - i, kCol - i, DIAG); // 3rd quadrant diag
-		checkStatus = checkStatus || isThreat(pColor, kRow + i, kCol - i, DIAG); // 4th quadrant diag
+		checkStatus = checkStatus || isThreat(currPlayerColor, kRow + i, kCol + i, DIAG); // 1st quadrant diag
+		checkStatus = checkStatus || isThreat(currPlayerColor, kRow - i, kCol + i, DIAG); // 2nd quadrant diag
+		checkStatus = checkStatus || isThreat(currPlayerColor, kRow - i, kCol - i, DIAG); // 3rd quadrant diag
+		checkStatus = checkStatus || isThreat(currPlayerColor, kRow + i, kCol - i, DIAG); // 4th quadrant diag
 		// Row threat detection
-		checkStatus = checkStatus || isThreat(pColor, kRow, kCol + i, ROW); // Squares to right of king
-		checkStatus = checkStatus || isThreat(pColor, kRow, kCol - i, ROW); // Squares to left of king
+		checkStatus = checkStatus || isThreat(currPlayerColor, kRow, kCol + i, ROW); // Squares to right of king
+		checkStatus = checkStatus || isThreat(currPlayerColor, kRow, kCol - i, ROW); // Squares to left of king
 		// Column threat detection
-		checkStatus = checkStatus || isThreat(pColor, kRow + i, kCol, COL); // Squares above king
-		checkStatus = checkStatus || isThreat(pColor, kRow - i, kCol, COL); // Square below king
+		checkStatus = checkStatus || isThreat(currPlayerColor, kRow + i, kCol, COL); // Squares above king
+		checkStatus = checkStatus || isThreat(currPlayerColor, kRow - i, kCol, COL); // Square below king
 	}
 
 	return checkStatus;
 }
 
-bool Rules::isPawnThreat(Color pColor, int row, int col) {
+bool Rules::isPawnThreat(Color currPlayerColor, int row, int col) {
 	Square s;
 	bool threatStatus = false;
 
@@ -347,14 +348,14 @@ bool Rules::isPawnThreat(Color pColor, int row, int col) {
 	} else {
 
 		s = pBoard->getSquare(row, col);
-		threatStatus = s.getPiece().pieceType == PAWN && s.getPiece().pieceColor != pColor;
+		threatStatus = s.getPiece().pieceType == PAWN && s.getPiece().pieceColor != currPlayerColor;
 	}
 
 	return threatStatus;
 }
 
 
-bool Rules::isKnightThreat(Color pColor, int row, int col) {
+bool Rules::isKnightThreat(Color currPlayerColor, int row, int col) {
 	Square s;
 	bool threatStatus = false;
 
@@ -364,13 +365,13 @@ bool Rules::isKnightThreat(Color pColor, int row, int col) {
 		// Outside of board boundaries = no threat
 	} else {
 		s = pBoard->getSquare(row, col);
-		threatStatus = s.getPiece().pieceType == KNIGHT && s.getPiece().pieceColor != pColor;
+		threatStatus = s.getPiece().pieceType == KNIGHT && s.getPiece().pieceColor != currPlayerColor;
 	}
 
 	return threatStatus;
 }
 
-bool Rules::isThreat(Color pColor, int row, int col, int threatType) {
+bool Rules::isThreat(Color currPlayerColor, int row, int col, int threatType) {
 	Square s;
 	bool threatStatus = false;
 
@@ -386,37 +387,37 @@ bool Rules::isThreat(Color pColor, int row, int col, int threatType) {
 		switch(threatType) {
 			case DIAG:
 				threatStatus = (s.getPiece().pieceType == BISHOP || s.getPiece().pieceType == QUEEN) && 
-							   (s.getPiece().pieceColor != pColor);
+							   (s.getPiece().pieceColor != currPlayerColor);
 				break;
 			// TODO: The ROW and COL cases are identical, and I could just let ROW drop through to COL
 			case ROW:
 				threatStatus = (s.getPiece().pieceType == ROOK || s.getPiece().pieceType == QUEEN) && 
-							   (s.getPiece().pieceColor != pColor);
+							   (s.getPiece().pieceColor != currPlayerColor);
 				break;
 			case COL:
 				threatStatus = (s.getPiece().pieceType == ROOK || s.getPiece().pieceType == QUEEN) && 
-							   (s.getPiece().pieceColor != pColor);
+							   (s.getPiece().pieceColor != currPlayerColor);
 				break;
 			case KNIGHT: // KNIGHT value is from the Piece enumeration
 				// Check the eight possible squares, relative to the king, that a knight can
 				// threaten the king from
-				threatStatus = isKnightThreat(pColor, row + 2, col + 1);
-				threatStatus = threatStatus || isKnightThreat(pColor, row + 2, col - 1);
-				threatStatus = threatStatus || isKnightThreat(pColor, row - 2, col + 1);
-				threatStatus = threatStatus || isKnightThreat(pColor, row - 2, col - 1);
-				threatStatus = threatStatus || isKnightThreat(pColor, row + 1, col + 2);
-				threatStatus = threatStatus || isKnightThreat(pColor, row + 1, col - 2);
-				threatStatus = threatStatus || isKnightThreat(pColor, row - 1, col + 2);
-				threatStatus = threatStatus || isKnightThreat(pColor, row - 1, col - 2);
+				threatStatus = isKnightThreat(currPlayerColor, row + 2, col + 1);
+				threatStatus = threatStatus || isKnightThreat(currPlayerColor, row + 2, col - 1);
+				threatStatus = threatStatus || isKnightThreat(currPlayerColor, row - 2, col + 1);
+				threatStatus = threatStatus || isKnightThreat(currPlayerColor, row - 2, col - 1);
+				threatStatus = threatStatus || isKnightThreat(currPlayerColor, row + 1, col + 2);
+				threatStatus = threatStatus || isKnightThreat(currPlayerColor, row + 1, col - 2);
+				threatStatus = threatStatus || isKnightThreat(currPlayerColor, row - 1, col + 2);
+				threatStatus = threatStatus || isKnightThreat(currPlayerColor, row - 1, col - 2);
 				break;
 			case PAWN: // PAWN value is from the Piece enumeration
 				// Check the two squares immediately diagonal to (and in front of) the king's current position
-				if (pColor == WHITE) {
-					threatStatus = isPawnThreat(pColor, row + 1, col - 1);
-					threatStatus = threatStatus || isPawnThreat(pColor, row + 1, col + 1);
+				if (currPlayerColor == WHITE) {
+					threatStatus = isPawnThreat(currPlayerColor, row + 1, col - 1);
+					threatStatus = threatStatus || isPawnThreat(currPlayerColor, row + 1, col + 1);
 				} else {
-					threatStatus = isPawnThreat(pColor, row - 1, col - 1);
-					threatStatus = threatStatus || isPawnThreat(pColor, row - 1, col + 1);
+					threatStatus = isPawnThreat(currPlayerColor, row - 1, col - 1);
+					threatStatus = threatStatus || isPawnThreat(currPlayerColor, row - 1, col + 1);
 				}
 				break;
 			default:
