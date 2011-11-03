@@ -13,11 +13,11 @@ int main(int argc, char **argv) {
 	Display d(argc, argv);
 	Board b;
 	Rules r;
-	Color player = BLACK;
+	Color player = WHITE;
 	while(1) {
 		move = d.getMove(b, r, player);
 		move.execute();
-		player = (player==BLACK) ? WHITE : BLACK;
+		player = (player==WHITE) ? BLACK : WHITE;
 		ofstream logfile("Log.txt", ifstream::out);
 
 		for(int j=0; j<8; j++) {
@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
 				int col = s.getCol();
 				Color c = s.getColor();
 				Piece p = s.getPiece();
-				logfile << row << " " << col << " " << c << " " << p << endl;
+				logfile << row << " " << col << " " << c << " " << p.pieceType << endl;
 			}
 		}
 	}
