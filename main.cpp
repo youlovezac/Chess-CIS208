@@ -12,23 +12,26 @@ int main(int argc, char **argv) {
 	Move move;
 	Display d(argc, argv);
 	Board b;
-	Rules r;
+	Rules r(&b);
 	Color player = WHITE;
 	while(1) {
 		move = d.getMove(b, r, player);
 		move.execute();
 		player = (player==WHITE) ? BLACK : WHITE;
-		ofstream logfile("Log.txt", ifstream::out);
+	    ofstream logfile("Log.txt", ifstream::out);
 
-		for(int j=0; j<8; j++) {
-			for(int i=0; i<8; i++) {
-				Square s = b.getSquare(j, i);
+        logfile << "Color (c or PC): White = 0, Black = 1" << endl << "Pieces (P): NOPIECE = -1, PAWN=1, KNIGHT = -3, BISHOP = 3, ROOK = 5, QUEEN = 9, KING = 1000" << endl;
+        logfile << "[R C c PC P]" << endl;
+		for(int i=7; i>=0; i--) {
+		    for(int j=0; j<8; j++) {
+				Square s = b.getSquare(i, j);
 				int row = s.getRow();
 				int col = s.getCol();
 				Color c = s.getColor();
 				Piece p = s.getPiece();
-				logfile << row << " " << col << " " << c << " " << p.pieceType << endl;
+				logfile << "[" << row << " " << col << " " << c << " " << p.pieceColor << " " << p.pieceType << "] ";
 			}
+            logfile << endl;
 		}
 	}
 	return 0;
