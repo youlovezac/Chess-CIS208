@@ -1,0 +1,20 @@
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.default.props" />
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.Targets" />
+	<ItemGroup Label="ProjectConfigurations">
+		<ProjectConfiguration Include="Debug|Win32">
+			<Configuration>Debug</Configuration>
+			<Platform>Win32</Platform>
+		</ProjectConfiguration>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ClCompile Include="Board.cpp" />
+		<ClCompile Include="Display.cpp" />
+		<ClCompile Include="main.cpp" />
+		<ClCompile Include="Move.cpp" />
+		<ClCompile Include="Rules.cpp" />
+		<ClCompile Include="Square.cpp" />
+	</ItemGroup>
+</Project>
