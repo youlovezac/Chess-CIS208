@@ -1,16 +1,17 @@
 #ifndef SQUARE_H
 #define SQUARE_H
 
-#define SQ_UL 7
-#define SQ_LL 0
+const int SQ_UL = 7;
+const int SQ_LL = 0;
 
 typedef enum Color { 
-	WHITE,
-	BLACK
+    NOCOLOR = -1,
+	WHITE = 0,
+	BLACK = 1
 } Color;
 
 typedef enum PieceType {
-	NOPIECE = 0,
+    NOPIECE = -1,
 	PAWN = 1,
 	KNIGHT = -3,
 	BISHOP = 3,
@@ -33,12 +34,12 @@ public:
 	bool operator!=(const Square& s);
 	int getRow() const;
 	int getCol() const;
-	void setRow(int r) { if(r <= SQ_UL && r >= SQ_LL) row = r; }
-	void setCol(int c) { if(c <= SQ_UL && c >= SQ_LL) col = c; }
+	void setRow(int r);
+	void setCol(int c);
 	Color getColor() const;
 	Piece getPiece() const;
-	void setColor(Color c) { squareColor = c; }
-	void setPiece(Piece p) { currPiece = p; }
+	void setColor(Color c);
+	void setPiece(Piece p);
 private:
 	int row, col;
 	Color squareColor;

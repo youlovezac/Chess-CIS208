@@ -1,7 +1,7 @@
 #include "Square.h"
 
 Square::Square() {
-	squareColor = WHITE;
+	squareColor = NOCOLOR;
 	currPiece.pieceType = NOPIECE;
 	row = 1;
 	col = 1;
@@ -48,3 +48,20 @@ int Square::getCol() const {
 	return col;
 }
 
+void Square::setRow(int r) {
+    if(r <= SQ_UL && r >= SQ_LL)
+        row = r;
+}
+
+void Square::setCol(int c) {
+    if(c <= SQ_UL && c >= SQ_LL)
+        col = c;
+}
+
+void Square::setColor(Color c) {
+    squareColor = c;
+}
+
+void Square::setPiece(Piece p) {
+    currPiece = p;
+}
